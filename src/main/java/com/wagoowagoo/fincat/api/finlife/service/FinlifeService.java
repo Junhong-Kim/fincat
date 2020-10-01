@@ -1,11 +1,11 @@
-package com.wagoowagoo.fincat.finlife.service;
+package com.wagoowagoo.fincat.api.finlife.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.wagoowagoo.fincat.finlife.dto.FinlifeDto;
+import com.wagoowagoo.fincat.api.finlife.dto.FinlifeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;

@@ -1,9 +1,9 @@
-package com.wagoowagoo.fincat.finlife.controller;
+package com.wagoowagoo.fincat.api.finlife.controller;
 
 import com.wagoowagoo.fincat.common.BaseResponse;
 import com.wagoowagoo.fincat.common.SuccessResponse;
-import com.wagoowagoo.fincat.finlife.dto.FinlifeDto;
-import com.wagoowagoo.fincat.finlife.service.FinlifeService;
+import com.wagoowagoo.fincat.api.finlife.dto.FinlifeDto;
+import com.wagoowagoo.fincat.api.finlife.service.FinlifeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

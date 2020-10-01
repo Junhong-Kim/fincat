@@ -1,4 +1,4 @@
-package com.wagoowagoo.fincat.finlife.dto;
+package com.wagoowagoo.fincat.api.finlife.dto;
 
 import lombok.Getter;
 import lombok.Setter;
