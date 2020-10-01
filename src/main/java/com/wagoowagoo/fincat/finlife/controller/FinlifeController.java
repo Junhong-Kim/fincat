@@ -1,5 +1,7 @@
 package com.wagoowagoo.fincat.finlife.controller;
 
+import com.wagoowagoo.fincat.common.BaseResponse;
+import com.wagoowagoo.fincat.common.SuccessResponse;
 import com.wagoowagoo.fincat.finlife.dto.FinlifeDto;
 import com.wagoowagoo.fincat.finlife.service.FinlifeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,9 @@ public class FinlifeController {
     }
 
     @GetMapping("/financeCompany")
-    public List<FinlifeDto.FinanceCompany> getFinanceCompany(@RequestParam String topFinGrpNo,
-                                                             @RequestParam(defaultValue = "1") int pageNo) {
-        return finlifeService.getFinanceCompanyList(topFinGrpNo, pageNo);
+    public BaseResponse getFinanceCompany(@RequestParam String topFinGrpNo,
+                                          @RequestParam(defaultValue = "1") int pageNo) {
+        List<FinlifeDto.FinanceCompany> data = finlifeService.getFinanceCompanyList(topFinGrpNo, pageNo);
+        return new SuccessResponse<>(data);
     }
 }
