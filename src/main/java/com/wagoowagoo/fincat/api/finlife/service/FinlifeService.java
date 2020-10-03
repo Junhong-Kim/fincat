@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -63,5 +64,49 @@ public class FinlifeService {
             }
         });
         return financeCompanyList;
+    }
+
+    public HashMap<String, FinlifeObjectMapper.DepositProduct> getDepositProductList(String topFinGrpNo, String financeCd, int pageNo) {
+        String apiUrl = finlifeUrl + DEPOSIT_PRODUCTS + RESPONSE_TYPE +
+                "?auth=" + finlifeAuth +
+                "&topFinGrpNo=" + topFinGrpNo +
+                "&financeCd=" + financeCd +
+                "&pageNo=" + pageNo;
+
+        ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
+        JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
+        HashMap<String, FinlifeObjectMapper.DepositProduct> depositProductMap = new HashMap<>();
+
+        JsonObject result = jsonResponse.get("result").getAsJsonObject();
+        JsonArray baseList = result.get("baseList").getAsJsonArray();
+        JsonArray optionList = result.get("optionList").getAsJsonArray();
+
+        // 상품 정보
+        baseList.forEach(jsonObject -> {
+            try {
+                FinlifeObjectMapper.DepositProduct depositProduct = objectMapper.readValue(
+                        jsonObject.toString(),
+                        FinlifeObjectMapper.DepositProduct.class);
+
+                depositProductMap.put(depositProduct.getFin_prdt_cd(), depositProduct);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 상품 옵션
+        optionList.forEach(jsonObject -> {
+            try {
+                FinlifeObjectMapper.DepositProductOption depositProductOption = objectMapper.readValue(
+                        jsonObject.toString(),
+                        FinlifeObjectMapper.DepositProductOption.class);
+
+                FinlifeObjectMapper.DepositProduct depositProduct = depositProductMap.get(depositProductOption.getFin_prdt_cd());
+                depositProduct.getOptionList().add(depositProductOption);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        return depositProductMap;
     }
 }
