@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.wagoowagoo.fincat.api.finlife.dto.FinlifeDto;
+import com.wagoowagoo.fincat.api.finlife.dto.FinlifeObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -39,7 +39,7 @@ public class FinlifeService {
     private String finlifeUrl;
 
     // TODO: Cache 처리
-    public List<FinlifeDto.FinanceCompany> getFinanceCompanyList(String topFinGrpNo, int pageNo) {
+    public List<FinlifeObjectMapper.FinanceCompany> getFinanceCompanyList(String topFinGrpNo, int pageNo) {
         String apiUrl = finlifeUrl + FINANCE_COMPANY + RESPONSE_TYPE +
                 "?auth=" + finlifeAuth +
                 "&topFinGrpNo=" + topFinGrpNo +
@@ -47,13 +47,16 @@ public class FinlifeService {
 
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
-        List<FinlifeDto.FinanceCompany> financeCompanyList = new ArrayList<>();
+        List<FinlifeObjectMapper.FinanceCompany> financeCompanyList = new ArrayList<>();
 
         JsonObject result = jsonResponse.get("result").getAsJsonObject();
         JsonArray baseList = result.get("baseList").getAsJsonArray();
         baseList.forEach(jsonObject -> {
             try {
-                FinlifeDto.FinanceCompany financeCompany = objectMapper.readValue(jsonObject.toString(), FinlifeDto.FinanceCompany.class);
+                FinlifeObjectMapper.FinanceCompany financeCompany = objectMapper.readValue(
+                        jsonObject.toString(),
+                        FinlifeObjectMapper.FinanceCompany.class);
+
                 financeCompanyList.add(financeCompany);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
