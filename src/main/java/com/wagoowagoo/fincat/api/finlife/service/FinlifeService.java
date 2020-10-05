@@ -109,4 +109,48 @@ public class FinlifeService {
         });
         return depositProductMap;
     }
+
+    public HashMap<String, FinlifeObjectMapper.SavingProduct> getSavingProductList(String topFinGrpNo, String financeCd, int pageNo) {
+        String apiUrl = finlifeUrl + SAVING_PRODUCTS + RESPONSE_TYPE +
+                "?auth=" + finlifeAuth +
+                "&topFinGrpNo=" + topFinGrpNo +
+                "&financeCd=" + financeCd +
+                "&pageNo=" + pageNo;
+
+        ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
+        JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
+        HashMap<String, FinlifeObjectMapper.SavingProduct> savingProductMap = new HashMap<>();
+
+        JsonObject result = jsonResponse.get("result").getAsJsonObject();
+        JsonArray baseList = result.get("baseList").getAsJsonArray();
+        JsonArray optionList = result.get("optionList").getAsJsonArray();
+
+        // 상품 정보
+        baseList.forEach(jsonObject -> {
+            try {
+                FinlifeObjectMapper.SavingProduct savingProduct = objectMapper.readValue(
+                        jsonObject.toString(),
+                        FinlifeObjectMapper.SavingProduct.class);
+
+                savingProductMap.put(savingProduct.getFin_prdt_cd(), savingProduct);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 상품 옵션
+        optionList.forEach(jsonObject -> {
+            try {
+                FinlifeObjectMapper.SavingProductOption savingProductOption = objectMapper.readValue(
+                        jsonObject.toString(),
+                        FinlifeObjectMapper.SavingProductOption.class);
+
+                FinlifeObjectMapper.SavingProduct depositProduct = savingProductMap.get(savingProductOption.getFin_prdt_cd());
+                depositProduct.getOptionList().add(savingProductOption);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        return savingProductMap;
+    }
 }

@@ -79,4 +79,41 @@ public class FinlifeController {
                 .collect(Collectors.toList());
         return new SuccessResponse<>(data);
     }
+
+    @GetMapping("/savingProduct")
+    public BaseResponse getSavingProductList(@RequestParam String topFinGrpNo,
+                                             @RequestParam String financeCd,
+                                             @RequestParam(defaultValue = "1") int pageNo) {
+        HashMap<String, FinlifeObjectMapper.SavingProduct> hashMap =
+                finlifeService.getSavingProductList(topFinGrpNo, financeCd, pageNo);
+        List<FinlifeDto.SavingProduct> data = hashMap.values().stream().map(value ->
+                FinlifeDto.SavingProduct.builder()
+                        .disclosureMonth(value.getDcls_month())
+                        .finCompanyCode(value.getFin_co_no())
+                        .finCompanyName(value.getKor_co_nm())
+                        .productCode(value.getFin_prdt_cd())
+                        .productName(value.getFin_prdt_nm())
+                        .joinWay(value.getJoin_way())
+                        .joinDeny(value.getJoin_deny())
+                        .joinMember(value.getJoin_member())
+                        .maturityInterest(value.getMtrt_int())
+                        .specialCondition(value.getSpcl_cnd())
+                        .etcNote(value.getEtc_note())
+                        .maxLimit(value.getMax_limit())
+                        .disclosureStartAt(value.getDcls_strt_day())
+                        .disclosureEndAt(value.getDcls_end_day())
+                        .finCompanySubmissionAt(value.getFin_co_subm_day())
+                        .optionList(value.getOptionList().stream().map(obj ->
+                                FinlifeDto.SavingProductOption.builder()
+                                        .interestRateType(obj.getIntr_rate_type())
+                                        .interestRateTypeName(obj.getIntr_rate_type_nm())
+                                        .interestRate(obj.getIntr_rate())
+                                        .maxInterestRate(obj.getIntr_rate2())
+                                        .saveTerm(obj.getSave_trm())
+                                        .build())
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+        return new SuccessResponse<>(data);
+    }
 }
