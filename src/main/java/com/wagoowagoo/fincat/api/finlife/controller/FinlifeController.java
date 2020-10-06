@@ -45,7 +45,7 @@ public class FinlifeController {
 
     @GetMapping("/depositProduct")
     public BaseResponse getDepositProductList(@RequestParam String topFinGrpNo,
-                                              @RequestParam String financeCd,
+                                              @RequestParam(required = false) String financeCd,
                                               @RequestParam(defaultValue = "1") int pageNo) {
         HashMap<String, FinlifeObjectMapper.DepositProduct> hashMap =
                 finlifeService.getDepositProductList(topFinGrpNo, financeCd, pageNo);
@@ -82,7 +82,7 @@ public class FinlifeController {
 
     @GetMapping("/savingProduct")
     public BaseResponse getSavingProductList(@RequestParam String topFinGrpNo,
-                                             @RequestParam String financeCd,
+                                             @RequestParam(required = false) String financeCd,
                                              @RequestParam(defaultValue = "1") int pageNo) {
         HashMap<String, FinlifeObjectMapper.SavingProduct> hashMap =
                 finlifeService.getSavingProductList(topFinGrpNo, financeCd, pageNo);

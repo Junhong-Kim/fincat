@@ -13,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +28,7 @@ public class FinlifeService {
     private static final String RENT_HOUSE_LOAN_PRODUCTS = "/rentHouseLoanProductsSearch"; // 전세자금대출
     private static final String CREDIT_LOAN_PRODUCTS = "/creditLoanProductsSearch"; // 개인신용대출
 
-    private final String finlifeAuth = System.getenv("FINLIFE_AUTH");
+    private final String FINLIFE_AUTH = System.getenv("FINLIFE_AUTH");
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -41,10 +38,7 @@ public class FinlifeService {
 
     // TODO: Cache 처리
     public List<FinlifeObjectMapper.FinanceCompany> getFinanceCompanyList(String topFinGrpNo, int pageNo) {
-        String apiUrl = finlifeUrl + FINANCE_COMPANY + RESPONSE_TYPE +
-                "?auth=" + finlifeAuth +
-                "&topFinGrpNo=" + topFinGrpNo +
-                "&pageNo=" + pageNo;
+        String apiUrl = createFinlifeApiUrl(topFinGrpNo, null, pageNo, FINANCE_COMPANY);
 
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
@@ -52,6 +46,8 @@ public class FinlifeService {
 
         JsonObject result = jsonResponse.get("result").getAsJsonObject();
         JsonArray baseList = result.get("baseList").getAsJsonArray();
+
+        // 회사 정보
         baseList.forEach(jsonObject -> {
             try {
                 FinlifeObjectMapper.FinanceCompany financeCompany = objectMapper.readValue(
@@ -67,11 +63,7 @@ public class FinlifeService {
     }
 
     public HashMap<String, FinlifeObjectMapper.DepositProduct> getDepositProductList(String topFinGrpNo, String financeCd, int pageNo) {
-        String apiUrl = finlifeUrl + DEPOSIT_PRODUCTS + RESPONSE_TYPE +
-                "?auth=" + finlifeAuth +
-                "&topFinGrpNo=" + topFinGrpNo +
-                "&financeCd=" + financeCd +
-                "&pageNo=" + pageNo;
+        String apiUrl = createFinlifeApiUrl(topFinGrpNo, financeCd, pageNo, DEPOSIT_PRODUCTS);
 
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
@@ -111,11 +103,7 @@ public class FinlifeService {
     }
 
     public HashMap<String, FinlifeObjectMapper.SavingProduct> getSavingProductList(String topFinGrpNo, String financeCd, int pageNo) {
-        String apiUrl = finlifeUrl + SAVING_PRODUCTS + RESPONSE_TYPE +
-                "?auth=" + finlifeAuth +
-                "&topFinGrpNo=" + topFinGrpNo +
-                "&financeCd=" + financeCd +
-                "&pageNo=" + pageNo;
+        String apiUrl = createFinlifeApiUrl(topFinGrpNo, financeCd, pageNo, SAVING_PRODUCTS);
 
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
@@ -152,5 +140,26 @@ public class FinlifeService {
             }
         });
         return savingProductMap;
+    }
+
+    /***
+     * 금융상품 API URL 생성
+     * @param topFinGrpNo 권역코드
+     * @param financeCd 금융회사 코드
+     * @param pageNo 페이지 번호
+     * @param api API 주소
+     */
+    private String createFinlifeApiUrl(String topFinGrpNo, String financeCd, int pageNo, String api) {
+        StringBuilder apiUrl = new StringBuilder()
+                .append(finlifeUrl).append(api).append(RESPONSE_TYPE)
+                .append("?auth=").append(FINLIFE_AUTH)
+                .append("&pageNo=").append(pageNo)
+                .append("&topFinGrpNo=").append(topFinGrpNo);
+
+        if (Optional.ofNullable(financeCd).isPresent()) {
+            apiUrl.append("&financeCd=").append(financeCd);
+        }
+
+        return apiUrl.toString();
     }
 }

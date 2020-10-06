@@ -35,7 +35,7 @@ public class FinlifeDto {
         private String joinDeny; // 가입제한
         private String joinMember; // 가입대상
         private String etcNote; // 기타 유의사항
-        private Integer maxLimit; // 최고한도
+        private Long maxLimit; // 최고한도
         private String disclosureStartAt; // 공시 시작일 (YYYYMMDD)
         private String disclosureEndAt; // 공시 종료일 (YYYYMMDD)
         private String finCompanySubmissionAt; // 금융회사 제출일 (YYYYMMDDHH24MI)
@@ -68,7 +68,7 @@ public class FinlifeDto {
         private String joinDeny; // 가입제한
         private String joinMember; // 가입대상
         private String etcNote; // 기타 유의사항
-        private Integer maxLimit; // 최고한도
+        private Long maxLimit; // 최고한도
         private String disclosureStartAt; // 공시 시작일 (YYYYMMDD)
         private String disclosureEndAt; // 공시 종료일 (YYYYMMDD)
         private String finCompanySubmissionAt; // 금융회사 제출일 (YYYYMMDDHH24MI)

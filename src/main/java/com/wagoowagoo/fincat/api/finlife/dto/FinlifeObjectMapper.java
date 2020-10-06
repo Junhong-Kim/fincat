@@ -33,7 +33,7 @@ public class FinlifeObjectMapper {
         private String join_deny;
         private String join_member;
         private String etc_note;
-        private Integer max_limit;
+        private Long max_limit;
         private String dcls_strt_day;
         private String dcls_end_day;
         private String fin_co_subm_day;
@@ -67,7 +67,7 @@ public class FinlifeObjectMapper {
         private String join_deny;
         private String join_member;
         private String etc_note;
-        private Integer max_limit;
+        private Long max_limit;
         private String dcls_strt_day;
         private String dcls_end_day;
         private String fin_co_subm_day;
