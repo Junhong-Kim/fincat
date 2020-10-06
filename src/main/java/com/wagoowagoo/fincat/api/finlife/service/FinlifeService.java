@@ -36,10 +36,16 @@ public class FinlifeService {
     @Value("${finlife.url}")
     private String finlifeUrl;
 
-    // TODO: Cache 처리
+    /***
+     * 금융회사 목록 조회
+     * @param topFinGrpNo 권역코드
+     * @param pageNo 페이지 번호
+     * @return 금융회사 목록
+     */
     public List<FinlifeObjectMapper.FinanceCompany> getFinanceCompanyList(String topFinGrpNo, int pageNo) {
         String apiUrl = createFinlifeApiUrl(topFinGrpNo, null, pageNo, FINANCE_COMPANY);
 
+        // api 요청
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
         List<FinlifeObjectMapper.FinanceCompany> financeCompanyList = new ArrayList<>();
@@ -62,9 +68,17 @@ public class FinlifeService {
         return financeCompanyList;
     }
 
+    /***
+     * 정기예금 목록 조회
+     * @param topFinGrpNo 권역코드
+     * @param financeCd 금융회사 코드
+     * @param pageNo 페이지 번호
+     * @return 정기예금 목록
+     */
     public HashMap<String, FinlifeObjectMapper.DepositProduct> getDepositProductList(String topFinGrpNo, String financeCd, int pageNo) {
         String apiUrl = createFinlifeApiUrl(topFinGrpNo, financeCd, pageNo, DEPOSIT_PRODUCTS);
 
+        // api 요청
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
         HashMap<String, FinlifeObjectMapper.DepositProduct> depositProductMap = new HashMap<>();
@@ -102,9 +116,17 @@ public class FinlifeService {
         return depositProductMap;
     }
 
+    /***
+     * 적금 목록 조회
+     * @param topFinGrpNo 권역코드
+     * @param financeCd 금융회사 코드
+     * @param pageNo 페이지 번호
+     * @return 적금 목록
+     */
     public HashMap<String, FinlifeObjectMapper.SavingProduct> getSavingProductList(String topFinGrpNo, String financeCd, int pageNo) {
         String apiUrl = createFinlifeApiUrl(topFinGrpNo, financeCd, pageNo, SAVING_PRODUCTS);
 
+        // api 요청
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
         HashMap<String, FinlifeObjectMapper.SavingProduct> savingProductMap = new HashMap<>();
