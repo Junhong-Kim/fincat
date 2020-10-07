@@ -8,6 +8,7 @@ public enum ErrorCode {
     // OPEN API
     FINLIFE_API_ERROR("0001", "FINLIFE API 에러"),
 
+    REQUEST_ERROR("9901", "요청 에러"),
     UNEXPECTED_ERROR("9999", "알 수 없는 에러");
 
     private final String code;
