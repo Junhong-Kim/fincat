@@ -32,7 +32,7 @@ public class FinlifeDto {
         private String joinWay; // 가입방법
         private String maturityInterest; // 만기 이자율
         private String specialCondition; // 우대조건
-        private String joinDeny; // 가입제한
+        private String joinDeny; // 가입제한 (1: 제한없음, 2: 서민전용, 3: 일부제한)
         private String joinMember; // 가입대상
         private String etcNote; // 기타 유의사항
         private Long maxLimit; // 최고한도
@@ -65,7 +65,7 @@ public class FinlifeDto {
         private String joinWay; // 가입방법
         private String maturityInterest; // 만기 이자율
         private String specialCondition; // 우대조건
-        private String joinDeny; // 가입제한
+        private String joinDeny; // 가입제한 (1: 제한없음, 2: 서민전용, 3: 일부제한)
         private String joinMember; // 가입대상
         private String etcNote; // 기타 유의사항
         private Long maxLimit; // 최고한도
