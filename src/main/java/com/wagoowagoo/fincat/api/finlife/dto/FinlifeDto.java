@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class FinlifeDto {
@@ -11,7 +12,7 @@ public class FinlifeDto {
     @Getter
     @Setter
     @Builder
-    public static class FinanceCompany {
+    public static class FinanceCompany implements Serializable {
         private String disclosureMonth; // 공시 제출월 (YYYYMM)
         private String finCompanyCode; // 금융회사 코드
         private String finCompanyName; // 금융회사 이름
@@ -23,7 +24,7 @@ public class FinlifeDto {
     @Getter
     @Setter
     @Builder
-    public static class DepositProduct {
+    public static class DepositProduct implements Serializable {
         private String disclosureMonth; // 공시 제출월 (YYYYMM)
         private String finCompanyCode; // 금융회사 코드
         private String finCompanyName; // 귬융회사 이름
@@ -45,7 +46,7 @@ public class FinlifeDto {
     @Getter
     @Setter
     @Builder
-    public static class DepositProductOption {
+    public static class DepositProductOption implements Serializable {
         private String interestRateType; // 저축 금리 유형
         private String interestRateTypeName; // 저축 금리 유형명
         private String saveTerm; // 저축 기간 (단위: 월)
@@ -56,7 +57,7 @@ public class FinlifeDto {
     @Getter
     @Setter
     @Builder
-    public static class SavingProduct {
+    public static class SavingProduct implements Serializable {
         private String disclosureMonth; // 공시 제출월 (YYYYMM)
         private String finCompanyCode; // 금융회사 코드
         private String finCompanyName; // 귬융회사 이름
@@ -78,7 +79,7 @@ public class FinlifeDto {
     @Getter
     @Setter
     @Builder
-    public static class SavingProductOption {
+    public static class SavingProductOption implements Serializable {
         private String interestRateType; // 저축 금리 유형
         private String interestRateTypeName; // 저축 금리 유형명
         private String saveTerm; // 저축 기간 (단위: 월)

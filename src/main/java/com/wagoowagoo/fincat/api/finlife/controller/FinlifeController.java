@@ -6,6 +6,7 @@ import com.wagoowagoo.fincat.api.finlife.service.FinlifeService;
 import com.wagoowagoo.fincat.common.BaseResponse;
 import com.wagoowagoo.fincat.common.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +27,7 @@ public class FinlifeController {
         this.finlifeService = finlifeService;
     }
 
+    @Cacheable(value = "financeCompany", key = "{#topFinGrpNo, #pageNo}")
     @GetMapping("/financeCompany")
     public BaseResponse getFinanceCompany(@RequestParam String topFinGrpNo,
                                           @RequestParam(defaultValue = "1") int pageNo) {
@@ -43,6 +45,7 @@ public class FinlifeController {
         return new SuccessResponse<>(data);
     }
 
+    @Cacheable(value = "depositProduct", key = "{#topFinGrpNo, #financeCd, #pageNo}")
     @GetMapping("/depositProduct")
     public BaseResponse getDepositProductList(@RequestParam String topFinGrpNo,
                                               @RequestParam(required = false) String financeCd,
@@ -80,6 +83,7 @@ public class FinlifeController {
         return new SuccessResponse<>(data);
     }
 
+    @Cacheable(value = "savingProduct", key = "{#topFinGrpNo, #financeCd, #pageNo}")
     @GetMapping("/savingProduct")
     public BaseResponse getSavingProductList(@RequestParam String topFinGrpNo,
                                              @RequestParam(required = false) String financeCd,
