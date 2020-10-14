@@ -1,2 +1,18 @@
 finlife:
   url: https://finlife.fss.or.kr/finlifeapi
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/fincat?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
