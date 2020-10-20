@@ -14,4 +14,11 @@ public class AccountDto {
         private AccountType accountType;
         private String email;
     }
+
+    @Getter
+    @Setter
+    public static class LoginAccount {
+        private String email;
+        private String password;
+    }
 }
