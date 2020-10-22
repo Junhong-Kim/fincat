@@ -8,10 +8,12 @@ import com.wagoowagoo.fincat.common.BaseResponse;
 import com.wagoowagoo.fincat.common.ErrorCode;
 import com.wagoowagoo.fincat.common.ErrorResponse;
 import com.wagoowagoo.fincat.common.SuccessResponse;
+import com.wagoowagoo.fincat.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +42,8 @@ public class AccountController {
         } catch (BadCredentialsException e) {
             return new ErrorResponse(ErrorCode.LOGIN_FAIL);
         }
-        accountService.loadUserByUsername(dto.getEmail());
-        return new SuccessResponse<>();
+        UserDetails userDetails = accountService.loadUserByUsername(dto.getEmail());
+        String accessToken = JwtUtil.generateToken(userDetails);
+        return new SuccessResponse<>(new AccountDto.LoginResponse(accessToken));
     }
 }
