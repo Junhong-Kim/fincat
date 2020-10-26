@@ -2,6 +2,7 @@ package com.wagoowagoo.fincat.api.account.service;
 
 import com.wagoowagoo.fincat.api.account.dto.AccountDto;
 import com.wagoowagoo.fincat.api.account.entity.Account;
+import com.wagoowagoo.fincat.api.account.entity.AccountType;
 import com.wagoowagoo.fincat.api.account.repository.AccountRepository;
 import com.wagoowagoo.fincat.config.SecurityAccount;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +26,17 @@ public class AccountService implements UserDetailsService {
     }
 
     /***
-     * 사용자 등록
-     * @param dto 사용자 생성 정보
+     * 이메일 계성 생성
+     * @param dto 이메일 계성 생성 정보
      */
-    public Account createAccount(AccountDto.CreateAccount dto) {
+    public Account createAccount(AccountDto.CreateAccountWithEmail dto) {
+        accountRepository.findByEmail(dto.getEmail()).ifPresent(account -> {
+            throw new RuntimeException(String.format("[%s] 이미 존재하는 이메일 계정입니다.", account.getEmail())); // TODO: 사용자 정의 예외처리
+        });
         return Account.builder()
-                .accountType(dto.getAccountType().toString())
+                .accountType(AccountType.EMAIL.getValue())
                 .email(dto.getEmail())
-                .accessToken("accessToken")
+                .password(dto.getPassword())
                 .build();
     }
 }
