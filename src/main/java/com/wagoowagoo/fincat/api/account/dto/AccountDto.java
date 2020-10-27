@@ -1,11 +1,13 @@
 package com.wagoowagoo.fincat.api.account.dto;
 
+import com.wagoowagoo.fincat.util.RegxUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 public class AccountDto {
 
@@ -19,7 +21,8 @@ public class AccountDto {
     public static class CreateAccountWithEmail {
 
         @NotBlank
-        private String email; // TODO: 이메일 유효성 검사
+        @Pattern(regexp = RegxUtil.EMAIL)
+        private String email;
 
         @NotBlank
         private String password;
