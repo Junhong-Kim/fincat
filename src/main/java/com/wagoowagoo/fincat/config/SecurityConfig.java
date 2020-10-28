@@ -17,6 +17,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AccountService accountService;
 
+    private static final String[] WHITELIST_URL = {
+            // API URL
+            "/api/*/account/email",
+            "/api/*/account/*/login",
+            // Swagger URL
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(accountService);
@@ -26,8 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/account/email").permitAll()
-                .antMatchers("/api/account/*/login").permitAll()
+                .antMatchers(WHITELIST_URL).permitAll()
                 .anyRequest().authenticated();
     }
 
