@@ -17,7 +17,7 @@ public class JwtUtil {
     private final String JWT_SECRET_KEY = System.getenv("JWT_SECRET_KEY");
 
     public static String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return (token != null) ? extractClaim(token, Claims::getSubject) : null;
     }
 
     public static Date extractExpiration(String token) {

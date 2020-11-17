@@ -2,6 +2,7 @@ package com.wagoowagoo.fincat.filter;
 
 import com.wagoowagoo.fincat.api.account.service.AccountService;
 import com.wagoowagoo.fincat.util.JwtUtil;
+import com.wagoowagoo.fincat.util.RequestUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,14 +29,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws IOException, ServletException {
 
-        String accessToken = null;
-        String username = null;
-
-        final String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            accessToken = authorizationHeader.substring(7);
-            username = JwtUtil.extractUsername(accessToken);
-        }
+        String accessToken = RequestUtil.getAccessToken(request);
+        String username = JwtUtil.extractUsername(accessToken);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = accountService.loadUserByUsername(username);
