@@ -1,7 +1,10 @@
 package com.wagoowagoo.fincat.api.notice.dto;
 
+import com.wagoowagoo.fincat.api.notice.entity.Notice;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 public class NoticeResponse {
 
@@ -14,5 +17,14 @@ public class NoticeResponse {
     public static class CreateNotice {
 
         private final long noticeId;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class GetNoticeList {
+
+        private final int totalPages;
+        private final long totalElements;
+        private final List<Notice> noticeList;
     }
 }

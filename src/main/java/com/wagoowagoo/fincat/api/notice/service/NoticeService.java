@@ -6,6 +6,8 @@ import com.wagoowagoo.fincat.api.notice.repository.NoticeRepository;
 import com.wagoowagoo.fincat.util.JwtUtil;
 import com.wagoowagoo.fincat.util.RequestUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,5 +29,9 @@ public class NoticeService {
                 .updatedBy(username)
                 .build();
         return noticeRepository.save(notice);
+    }
+
+    public Page<Notice> getNoticeList(Pageable pageable) {
+        return noticeRepository.findAll(pageable);
     }
 }

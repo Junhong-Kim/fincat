@@ -1,5 +1,6 @@
 package com.wagoowagoo.fincat.api.notice.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,9 +31,11 @@ public class Notice {
     private String contents;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private LocalDateTime updatedAt;
 
     @NotBlank

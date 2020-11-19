@@ -7,10 +7,9 @@ import com.wagoowagoo.fincat.api.notice.service.NoticeService;
 import com.wagoowagoo.fincat.common.BaseResponse;
 import com.wagoowagoo.fincat.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -27,6 +26,18 @@ public class NoticeController {
         Notice notice = noticeService.createNotice(request, dto);
 
         NoticeResponse.CreateNotice response = new NoticeResponse.CreateNotice(notice.getNoticeId());
+        return new SuccessResponse<>(response);
+    }
+
+    @GetMapping
+    public BaseResponse getNoticeList(final Pageable pageable) {
+        Page<Notice> noticeList = noticeService.getNoticeList(pageable);
+
+        NoticeResponse.GetNoticeList response = new NoticeResponse.GetNoticeList(
+                noticeList.getTotalPages(),
+                noticeList.getTotalElements(),
+                noticeList.getContent()
+        );
         return new SuccessResponse<>(response);
     }
 }
