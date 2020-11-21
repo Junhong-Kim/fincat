@@ -20,6 +20,12 @@ public class GlobalExceptionController {
         return new ResponseEntity<>(new ErrorResponse(ErrorCode.REQUEST_ERROR), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({ApiException.class})
+    public ResponseEntity<ErrorResponse> apiExceptionHandler(Exception e) {
+        ErrorCode errorCode = ErrorCode.valueOf(e.getMessage());
+        return new ResponseEntity<>(new ErrorResponse(errorCode), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {
         log.error(e.toString());

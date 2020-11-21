@@ -40,4 +40,12 @@ public class NoticeController {
         );
         return new SuccessResponse<>(response);
     }
+
+    @GetMapping("/{noticeId}")
+    public BaseResponse getNotice(@PathVariable("noticeId") final long noticeId) {
+        Notice notice = noticeService.getNotice(noticeId);
+
+        NoticeResponse.GetNotice getNotice = new NoticeResponse.GetNotice(notice);
+        return new SuccessResponse<>(getNotice);
+    }
 }

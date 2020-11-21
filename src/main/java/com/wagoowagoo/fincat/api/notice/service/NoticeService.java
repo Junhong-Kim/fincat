@@ -3,6 +3,8 @@ package com.wagoowagoo.fincat.api.notice.service;
 import com.wagoowagoo.fincat.api.notice.dto.NoticeRequest;
 import com.wagoowagoo.fincat.api.notice.entity.Notice;
 import com.wagoowagoo.fincat.api.notice.repository.NoticeRepository;
+import com.wagoowagoo.fincat.common.ErrorCode;
+import com.wagoowagoo.fincat.exception.ApiException;
 import com.wagoowagoo.fincat.util.JwtUtil;
 import com.wagoowagoo.fincat.util.RequestUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +35,11 @@ public class NoticeService {
 
     public Page<Notice> getNoticeList(Pageable pageable) {
         return noticeRepository.findAll(pageable);
+    }
+
+    public Notice getNotice(long noticeId) {
+        return noticeRepository
+                .findById(noticeId)
+                .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND_NOTICE));
     }
 }
