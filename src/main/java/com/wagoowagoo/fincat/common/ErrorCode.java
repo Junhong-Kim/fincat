@@ -16,6 +16,7 @@ public enum ErrorCode {
 
     // COMMON [99xx]
     REQUEST_ERROR("9901", "요청 에러"),
+    PERMISSION_ERROR("9902", "권한 에러"),
     UNEXPECTED_ERROR("9999", "알 수 없는 에러")
     ;
 

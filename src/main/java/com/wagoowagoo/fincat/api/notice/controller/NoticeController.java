@@ -56,4 +56,12 @@ public class NoticeController {
 
         return new SuccessResponse<>();
     }
+
+    @DeleteMapping("/{noticeId}")
+    public BaseResponse deleteNotice(HttpServletRequest request,
+                                     @PathVariable("noticeId") final long noticeId) {
+        noticeService.deleteNotice(request, noticeId);
+
+        return new SuccessResponse<>();
+    }
 }

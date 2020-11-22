@@ -5,6 +5,7 @@ import com.wagoowagoo.fincat.api.notice.entity.Notice;
 import com.wagoowagoo.fincat.api.notice.repository.NoticeRepository;
 import com.wagoowagoo.fincat.common.ErrorCode;
 import com.wagoowagoo.fincat.exception.ApiException;
+import com.wagoowagoo.fincat.util.ValidationUtil;
 import com.wagoowagoo.fincat.util.JwtUtil;
 import com.wagoowagoo.fincat.util.RequestUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class NoticeService {
 
     private final NoticeRepository noticeRepository;
 
+    @Transactional
     public Notice createNotice(HttpServletRequest request, NoticeRequest.CreateNotice dto) {
         String accessToken = RequestUtil.getAccessToken(request);
         String username = JwtUtil.extractUsername(accessToken);
@@ -50,5 +52,15 @@ public class NoticeService {
         Notice notice = getNotice(noticeId);
         notice.setTitle(dto.getTitle());
         notice.setContents(dto.getContents());
+    }
+
+    @Transactional
+    public void deleteNotice(HttpServletRequest request, long noticeId) {
+        String accessToken = RequestUtil.getAccessToken(request);
+        String username = JwtUtil.extractUsername(accessToken);
+
+        Notice notice = getNotice(noticeId);
+        ValidationUtil.validatePermission(notice.getCreatedBy(), username);
+        noticeRepository.delete(notice);
     }
 }
