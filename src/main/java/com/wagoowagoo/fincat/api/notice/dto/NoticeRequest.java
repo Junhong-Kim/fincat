@@ -25,4 +25,17 @@ public class NoticeRequest {
         @NotBlank
         private String contents;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateNotice {
+
+        @NotBlank
+        private String title;
+
+        @NotBlank
+        private String contents;
+    }
 }

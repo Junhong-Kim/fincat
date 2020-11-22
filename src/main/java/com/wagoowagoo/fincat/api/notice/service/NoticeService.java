@@ -11,11 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
@@ -41,5 +43,12 @@ public class NoticeService {
         return noticeRepository
                 .findById(noticeId)
                 .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND_NOTICE));
+    }
+
+    @Transactional
+    public void updateNotice(long noticeId, NoticeRequest.UpdateNotice dto) {
+        Notice notice = getNotice(noticeId);
+        notice.setTitle(dto.getTitle());
+        notice.setContents(dto.getContents());
     }
 }

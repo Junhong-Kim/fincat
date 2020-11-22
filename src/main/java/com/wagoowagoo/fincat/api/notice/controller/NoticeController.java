@@ -45,7 +45,15 @@ public class NoticeController {
     public BaseResponse getNotice(@PathVariable("noticeId") final long noticeId) {
         Notice notice = noticeService.getNotice(noticeId);
 
-        NoticeResponse.GetNotice getNotice = new NoticeResponse.GetNotice(notice);
-        return new SuccessResponse<>(getNotice);
+        NoticeResponse.GetNotice response = new NoticeResponse.GetNotice(notice);
+        return new SuccessResponse<>(response);
+    }
+
+    @PutMapping("/{noticeId}")
+    public BaseResponse updateNotice(@PathVariable("noticeId") final long noticeId,
+                                     @RequestBody NoticeRequest.UpdateNotice dto) {
+        noticeService.updateNotice(noticeId, dto);
+
+        return new SuccessResponse<>();
     }
 }
