@@ -1,5 +1,6 @@
 package com.wagoowagoo.fincat.api.account.entity;
 
+import com.wagoowagoo.fincat.api.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import javax.persistence.Id;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+public class Account extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

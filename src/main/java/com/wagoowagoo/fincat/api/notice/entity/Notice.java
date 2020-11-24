@@ -1,13 +1,10 @@
 package com.wagoowagoo.fincat.api.notice.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wagoowagoo.fincat.api.common.entity.BaseEntity;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Notice {
+public class Notice extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +24,6 @@ public class Notice {
     @NotBlank
     @Column(columnDefinition = "TEXT")
     private String contents;
-
-    @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
-    private LocalDateTime updatedAt;
 
     @NotBlank
     private String createdBy;
