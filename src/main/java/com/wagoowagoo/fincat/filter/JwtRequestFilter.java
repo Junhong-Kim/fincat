@@ -1,8 +1,15 @@
 package com.wagoowagoo.fincat.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wagoowagoo.fincat.api.account.service.AccountService;
+import com.wagoowagoo.fincat.common.ErrorCode;
+import com.wagoowagoo.fincat.common.ErrorResponse;
+import com.wagoowagoo.fincat.util.ConstantUtil;
 import com.wagoowagoo.fincat.util.JwtUtil;
 import com.wagoowagoo.fincat.util.RequestUtil;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +28,7 @@ import java.io.IOException;
 @AllArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    private final ObjectMapper objectMapper;
     private final AccountService accountService;
 
     @Override
@@ -29,20 +37,31 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws IOException, ServletException {
 
-        String accessToken = RequestUtil.getAccessToken(request);
-        String username = JwtUtil.extractUsername(accessToken);
+        try {
+            String accessToken = RequestUtil.getAccessToken(request);
+            String username = JwtUtil.extractUsername(accessToken);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = accountService.loadUserByUsername(username);
-            boolean isValidToken = JwtUtil.validateToken(accessToken, userDetails);
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = accountService.loadUserByUsername(username);
+                boolean isValidToken = JwtUtil.validateToken(accessToken, userDetails);
 
-            if (isValidToken) {
-                UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                if (isValidToken) {
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
+            filterChain.doFilter(request, response);
+        } catch (SignatureException e) {
+            response.setContentType(ConstantUtil.DEFAULT_CONTENT_TYPE);
+            response.getWriter().write(objectMapper.writeValueAsString(new ErrorResponse(ErrorCode.JWT_SIGNATURE_ERROR)));
+        } catch (MalformedJwtException e) {
+            response.setContentType(ConstantUtil.DEFAULT_CONTENT_TYPE);
+            response.getWriter().write(objectMapper.writeValueAsString(new ErrorResponse(ErrorCode.JWT_MALFORMED_ERROR)));
+        } catch (ExpiredJwtException e) {
+            response.setContentType(ConstantUtil.DEFAULT_CONTENT_TYPE);
+            response.getWriter().write(objectMapper.writeValueAsString(new ErrorResponse(ErrorCode.JWT_EXPIRED_ERROR)));
         }
-        filterChain.doFilter(request, response);
     }
 }

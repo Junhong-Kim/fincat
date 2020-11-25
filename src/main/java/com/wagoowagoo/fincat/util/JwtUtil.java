@@ -29,7 +29,10 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
     private static Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(JWT_SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser()
+                .setSigningKey(JWT_SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private static Boolean isTokenExpired(String token) {

@@ -17,6 +17,9 @@ public enum ErrorCode {
     // COMMON [99xx]
     REQUEST_ERROR("9901", "요청 에러"),
     PERMISSION_ERROR("9902", "권한 에러"),
+    JWT_SIGNATURE_ERROR("9903", "토큰 서명 오류"),
+    JWT_MALFORMED_ERROR("9904", "토큰 형식 오류"),
+    JWT_EXPIRED_ERROR("9905", "토큰 만료"),
     UNEXPECTED_ERROR("9999", "알 수 없는 에러")
     ;
 
