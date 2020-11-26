@@ -49,6 +49,7 @@ public class NoticeController {
         return new SuccessResponse<>(response);
     }
 
+    // FIXME: 관리자 전용 API
     @PutMapping("/{noticeId}")
     public BaseResponse updateNotice(@PathVariable("noticeId") final long noticeId,
                                      @RequestBody NoticeRequest.UpdateNotice dto) {
@@ -57,6 +58,7 @@ public class NoticeController {
         return new SuccessResponse<>();
     }
 
+    // FIXME: 관리자 전용 API
     @DeleteMapping("/{noticeId}")
     public BaseResponse deleteNotice(HttpServletRequest request,
                                      @PathVariable("noticeId") final long noticeId) {

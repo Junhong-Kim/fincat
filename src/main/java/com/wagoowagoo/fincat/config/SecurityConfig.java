@@ -25,6 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // API URL
             "/api/*/account/email",
             "/api/*/account/*/login",
+            "/api/*/notice",
+            "/api/*/notice/*",
             // Swagger URL
             "/swagger-resources/**",
             "/swagger-ui.html",
