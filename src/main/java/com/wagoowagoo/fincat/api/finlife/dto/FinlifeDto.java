@@ -9,10 +9,17 @@ import java.util.List;
 
 public class FinlifeDto {
 
+    private FinlifeDto() {
+        throw new IllegalStateException("DTO 클래스는 인스턴스 생성이 금지되어 있습니다.");
+    }
+
     @Getter
     @Setter
     @Builder
     public static class FinanceCompany implements Serializable {
+
+        private static final long serialVersionUID = -3053657621515479088L;
+
         private String disclosureMonth; // 공시 제출월 (YYYYMM)
         private String finCompanyCode; // 금융회사 코드
         private String finCompanyName; // 금융회사 이름
@@ -25,6 +32,9 @@ public class FinlifeDto {
     @Setter
     @Builder
     public static class DepositProduct implements Serializable {
+
+        private static final long serialVersionUID = 8014439245373499280L;
+
         private String disclosureMonth; // 공시 제출월 (YYYYMM)
         private String finCompanyCode; // 금융회사 코드
         private String finCompanyName; // 귬융회사 이름
@@ -47,6 +57,9 @@ public class FinlifeDto {
     @Setter
     @Builder
     public static class DepositProductOption implements Serializable {
+
+        private static final long serialVersionUID = 3974054508715695919L;
+
         private String interestRateType; // 저축 금리 유형
         private String interestRateTypeName; // 저축 금리 유형명
         private String saveTerm; // 저축 기간 (단위: 월)
@@ -58,6 +71,9 @@ public class FinlifeDto {
     @Setter
     @Builder
     public static class SavingProduct implements Serializable {
+
+        private static final long serialVersionUID = 8878699771590161200L;
+
         private String disclosureMonth; // 공시 제출월 (YYYYMM)
         private String finCompanyCode; // 금융회사 코드
         private String finCompanyName; // 귬융회사 이름
@@ -80,6 +96,9 @@ public class FinlifeDto {
     @Setter
     @Builder
     public static class SavingProductOption implements Serializable {
+
+        private static final long serialVersionUID = 8835630075716449448L;
+
         private String interestRateType; // 저축 금리 유형
         private String interestRateTypeName; // 저축 금리 유형명
         private String saveTerm; // 저축 기간 (단위: 월)

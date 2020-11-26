@@ -12,6 +12,8 @@ import java.io.Serializable;
 @JsonInclude(Include.NON_NULL)
 public class SuccessResponse<T> extends BaseResponse implements Serializable {
 
+    private static final long serialVersionUID = 1921298826463618980L;
+
     private T data; // API 응답 데이터
 
     public SuccessResponse() {

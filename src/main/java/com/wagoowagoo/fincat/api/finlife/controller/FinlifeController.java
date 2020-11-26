@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,7 +50,7 @@ public class FinlifeController {
     public BaseResponse getDepositProductList(@RequestParam String topFinGrpNo,
                                               @RequestParam(required = false) String financeCd,
                                               @RequestParam(defaultValue = "1") int pageNo) {
-        HashMap<String, FinlifeObjectMapper.DepositProduct> hashMap =
+        Map<String, FinlifeObjectMapper.DepositProduct> hashMap =
                 finlifeService.getDepositProductList(topFinGrpNo, financeCd, pageNo);
         List<FinlifeDto.DepositProduct> data = hashMap.values().stream().map(value ->
                 FinlifeDto.DepositProduct.builder()
@@ -88,7 +88,7 @@ public class FinlifeController {
     public BaseResponse getSavingProductList(@RequestParam String topFinGrpNo,
                                              @RequestParam(required = false) String financeCd,
                                              @RequestParam(defaultValue = "1") int pageNo) {
-        HashMap<String, FinlifeObjectMapper.SavingProduct> hashMap =
+        Map<String, FinlifeObjectMapper.SavingProduct> hashMap =
                 finlifeService.getSavingProductList(topFinGrpNo, financeCd, pageNo);
         List<FinlifeDto.SavingProduct> data = hashMap.values().stream().map(value ->
                 FinlifeDto.SavingProduct.builder()

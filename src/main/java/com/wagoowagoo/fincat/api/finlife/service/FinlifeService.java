@@ -20,6 +20,9 @@ import java.util.*;
 public class FinlifeService {
 
     private static final String RESPONSE_TYPE = ".json";
+    private static final String FINLIFE_RESULT = "result";
+    private static final String FINLIFE_BASE_LIST = "baseList";
+    private static final String FINLIFE_OPTION_LIST = "optionList";
     private static final String FINANCE_COMPANY = "/companySearch"; // 금융회사
     private static final String DEPOSIT_PRODUCTS = "/depositProductsSearch"; // 정기예금
     private static final String SAVING_PRODUCTS = "/savingProductsSearch"; // 적금
@@ -50,8 +53,8 @@ public class FinlifeService {
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
         List<FinlifeObjectMapper.FinanceCompany> financeCompanyList = new ArrayList<>();
 
-        JsonObject result = jsonResponse.get("result").getAsJsonObject();
-        JsonArray baseList = result.get("baseList").getAsJsonArray();
+        JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
+        JsonArray baseList = result.get(FINLIFE_BASE_LIST).getAsJsonArray();
 
         // 회사 정보
         baseList.forEach(jsonObject -> {
@@ -75,7 +78,7 @@ public class FinlifeService {
      * @param pageNo 페이지 번호
      * @return 정기예금 목록
      */
-    public HashMap<String, FinlifeObjectMapper.DepositProduct> getDepositProductList(String topFinGrpNo, String financeCd, int pageNo) {
+    public Map<String, FinlifeObjectMapper.DepositProduct> getDepositProductList(String topFinGrpNo, String financeCd, int pageNo) {
         String apiUrl = createFinlifeApiUrl(topFinGrpNo, financeCd, pageNo, DEPOSIT_PRODUCTS);
 
         // api 요청
@@ -83,9 +86,9 @@ public class FinlifeService {
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
         HashMap<String, FinlifeObjectMapper.DepositProduct> depositProductMap = new HashMap<>();
 
-        JsonObject result = jsonResponse.get("result").getAsJsonObject();
-        JsonArray baseList = result.get("baseList").getAsJsonArray();
-        JsonArray optionList = result.get("optionList").getAsJsonArray();
+        JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
+        JsonArray baseList = result.get(FINLIFE_BASE_LIST).getAsJsonArray();
+        JsonArray optionList = result.get(FINLIFE_OPTION_LIST).getAsJsonArray();
 
         // 상품 정보
         baseList.forEach(jsonObject -> {
@@ -123,7 +126,7 @@ public class FinlifeService {
      * @param pageNo 페이지 번호
      * @return 적금 목록
      */
-    public HashMap<String, FinlifeObjectMapper.SavingProduct> getSavingProductList(String topFinGrpNo, String financeCd, int pageNo) {
+    public Map<String, FinlifeObjectMapper.SavingProduct> getSavingProductList(String topFinGrpNo, String financeCd, int pageNo) {
         String apiUrl = createFinlifeApiUrl(topFinGrpNo, financeCd, pageNo, SAVING_PRODUCTS);
 
         // api 요청
@@ -131,9 +134,9 @@ public class FinlifeService {
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
         HashMap<String, FinlifeObjectMapper.SavingProduct> savingProductMap = new HashMap<>();
 
-        JsonObject result = jsonResponse.get("result").getAsJsonObject();
-        JsonArray baseList = result.get("baseList").getAsJsonArray();
-        JsonArray optionList = result.get("optionList").getAsJsonArray();
+        JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
+        JsonArray baseList = result.get(FINLIFE_BASE_LIST).getAsJsonArray();
+        JsonArray optionList = result.get(FINLIFE_OPTION_LIST).getAsJsonArray();
 
         // 상품 정보
         baseList.forEach(jsonObject -> {

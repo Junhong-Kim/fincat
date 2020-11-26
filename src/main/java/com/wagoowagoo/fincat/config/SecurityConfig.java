@@ -27,6 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/*/account/*/login",
             "/api/*/notice",
             "/api/*/notice/*",
+            // FINLIFE URL
+            "/api/*/finlife/*",
             // Swagger URL
             "/swagger-resources/**",
             "/swagger-ui.html",
