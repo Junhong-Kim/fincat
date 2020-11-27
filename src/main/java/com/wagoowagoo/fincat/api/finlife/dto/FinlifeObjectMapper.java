@@ -1,12 +1,19 @@
 package com.wagoowagoo.fincat.api.finlife.dto;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FinlifeObjectMapper {
+
+    private FinlifeObjectMapper() {
+        throw new IllegalStateException("ObjectMapper 클래스는 인스턴스 생성이 금지되어 있습니다.");
+    }
 
     @Getter
     @Setter
@@ -17,6 +24,16 @@ public class FinlifeObjectMapper {
         private String dcls_chrg_man;
         private String homp_url;
         private String cal_tel;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class DepositProductList {
+
+        private final int totalCount;
+        private final int maxPage;
+        private final int nowPage;
+        private final Map<String, DepositProduct> depositProductMap = new HashMap<>();
     }
 
     @Getter

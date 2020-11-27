@@ -2,6 +2,7 @@ package com.wagoowagoo.fincat.api.finlife.controller;
 
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeDto;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeObjectMapper;
+import com.wagoowagoo.fincat.api.finlife.dto.FinlifeResponse;
 import com.wagoowagoo.fincat.api.finlife.service.FinlifeService;
 import com.wagoowagoo.fincat.common.BaseResponse;
 import com.wagoowagoo.fincat.common.SuccessResponse;
@@ -50,36 +51,41 @@ public class FinlifeController {
     public BaseResponse getDepositProductList(@RequestParam String topFinGrpNo,
                                               @RequestParam(required = false) String financeCd,
                                               @RequestParam(defaultValue = "1") int pageNo) {
-        Map<String, FinlifeObjectMapper.DepositProduct> hashMap =
-                finlifeService.getDepositProductList(topFinGrpNo, financeCd, pageNo);
-        List<FinlifeDto.DepositProduct> data = hashMap.values().stream().map(value ->
-                FinlifeDto.DepositProduct.builder()
-                        .disclosureMonth(value.getDcls_month())
-                        .finCompanyCode(value.getFin_co_no())
-                        .finCompanyName(value.getKor_co_nm())
-                        .productCode(value.getFin_prdt_cd())
-                        .productName(value.getFin_prdt_nm())
-                        .joinWay(value.getJoin_way())
-                        .joinDeny(value.getJoin_deny())
-                        .joinMember(value.getJoin_member())
-                        .maturityInterest(value.getMtrt_int())
-                        .specialCondition(value.getSpcl_cnd())
-                        .etcNote(value.getEtc_note())
-                        .maxLimit(value.getMax_limit())
-                        .disclosureStartAt(value.getDcls_strt_day())
-                        .disclosureEndAt(value.getDcls_end_day())
-                        .finCompanySubmissionAt(value.getFin_co_subm_day())
-                        .optionList(value.getOptionList().stream().map(obj ->
-                                FinlifeDto.DepositProductOption.builder()
-                                        .interestRateType(obj.getIntr_rate_type())
-                                        .interestRateTypeName(obj.getIntr_rate_type_nm())
-                                        .interestRate(obj.getIntr_rate())
-                                        .maxInterestRate(obj.getIntr_rate2())
-                                        .saveTerm(obj.getSave_trm())
-                                        .build())
-                                .collect(Collectors.toList()))
-                        .build())
-                .collect(Collectors.toList());
+
+        FinlifeObjectMapper.DepositProductList depositProductList = finlifeService.getDepositProductList(topFinGrpNo, financeCd, pageNo);
+        FinlifeResponse.DepositProductList data = FinlifeResponse.DepositProductList.builder()
+                .totalCount(depositProductList.getTotalCount())
+                .maxPage(depositProductList.getMaxPage())
+                .nowPage(depositProductList.getNowPage())
+                .data(depositProductList.getDepositProductMap().values().stream().map(value ->
+                        FinlifeDto.DepositProduct.builder()
+                                .disclosureMonth(value.getDcls_month())
+                                .finCompanyCode(value.getFin_co_no())
+                                .finCompanyName(value.getKor_co_nm())
+                                .productCode(value.getFin_prdt_cd())
+                                .productName(value.getFin_prdt_nm())
+                                .joinWay(value.getJoin_way())
+                                .joinDeny(value.getJoin_deny())
+                                .joinMember(value.getJoin_member())
+                                .maturityInterest(value.getMtrt_int())
+                                .specialCondition(value.getSpcl_cnd())
+                                .etcNote(value.getEtc_note())
+                                .maxLimit(value.getMax_limit())
+                                .disclosureStartAt(value.getDcls_strt_day())
+                                .disclosureEndAt(value.getDcls_end_day())
+                                .finCompanySubmissionAt(value.getFin_co_subm_day())
+                                .optionList(value.getOptionList().stream().map(obj ->
+                                        FinlifeDto.DepositProductOption.builder()
+                                                .interestRateType(obj.getIntr_rate_type())
+                                                .interestRateTypeName(obj.getIntr_rate_type_nm())
+                                                .interestRate(obj.getIntr_rate())
+                                                .maxInterestRate(obj.getIntr_rate2())
+                                                .saveTerm(obj.getSave_trm())
+                                                .build())
+                                        .collect(Collectors.toList()))
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
         return new SuccessResponse<>(data);
     }
 

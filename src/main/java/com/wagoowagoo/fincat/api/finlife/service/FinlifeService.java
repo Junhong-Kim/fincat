@@ -23,6 +23,10 @@ public class FinlifeService {
     private static final String FINLIFE_RESULT = "result";
     private static final String FINLIFE_BASE_LIST = "baseList";
     private static final String FINLIFE_OPTION_LIST = "optionList";
+    private static final String FINLIFE_TOTAL_COUNT = "total_count";
+    private static final String FINLIFE_MAX_PAGE = "max_page_no";
+    private static final String FINLIFE_NOW_PAGE = "now_page_no";
+
     private static final String FINANCE_COMPANY = "/companySearch"; // 금융회사
     private static final String DEPOSIT_PRODUCTS = "/depositProductsSearch"; // 정기예금
     private static final String SAVING_PRODUCTS = "/savingProductsSearch"; // 적금
@@ -78,45 +82,47 @@ public class FinlifeService {
      * @param pageNo 페이지 번호
      * @return 정기예금 목록
      */
-    public Map<String, FinlifeObjectMapper.DepositProduct> getDepositProductList(String topFinGrpNo, String financeCd, int pageNo) {
+    public FinlifeObjectMapper.DepositProductList getDepositProductList(String topFinGrpNo, String financeCd, int pageNo) {
         String apiUrl = createFinlifeApiUrl(topFinGrpNo, financeCd, pageNo, DEPOSIT_PRODUCTS);
 
         // api 요청
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
-        HashMap<String, FinlifeObjectMapper.DepositProduct> depositProductMap = new HashMap<>();
-
         JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
-        JsonArray baseList = result.get(FINLIFE_BASE_LIST).getAsJsonArray();
-        JsonArray optionList = result.get(FINLIFE_OPTION_LIST).getAsJsonArray();
+
+        FinlifeObjectMapper.DepositProductList depositProductList = new FinlifeObjectMapper.DepositProductList(
+                result.get(FINLIFE_TOTAL_COUNT).getAsInt(),
+                result.get(FINLIFE_MAX_PAGE).getAsInt(),
+                result.get(FINLIFE_NOW_PAGE).getAsInt()
+        );
 
         // 상품 정보
-        baseList.forEach(jsonObject -> {
+        result.get(FINLIFE_BASE_LIST).getAsJsonArray().forEach(jsonObject -> {
             try {
                 FinlifeObjectMapper.DepositProduct depositProduct = objectMapper.readValue(
                         jsonObject.toString(),
                         FinlifeObjectMapper.DepositProduct.class);
 
-                depositProductMap.put(depositProduct.getFin_prdt_cd(), depositProduct);
+                depositProductList.getDepositProductMap().put(depositProduct.getFin_prdt_cd(), depositProduct);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         });
 
         // 상품 옵션
-        optionList.forEach(jsonObject -> {
+        result.get(FINLIFE_OPTION_LIST).getAsJsonArray().forEach(jsonObject -> {
             try {
                 FinlifeObjectMapper.DepositProductOption depositProductOption = objectMapper.readValue(
                         jsonObject.toString(),
                         FinlifeObjectMapper.DepositProductOption.class);
 
-                FinlifeObjectMapper.DepositProduct depositProduct = depositProductMap.get(depositProductOption.getFin_prdt_cd());
+                FinlifeObjectMapper.DepositProduct depositProduct = depositProductList.getDepositProductMap().get(depositProductOption.getFin_prdt_cd());
                 depositProduct.getOptionList().add(depositProductOption);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         });
-        return depositProductMap;
+        return depositProductList;
     }
 
     /***
