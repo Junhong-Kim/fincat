@@ -20,6 +20,7 @@ public enum ErrorCode {
     JWT_SIGNATURE_ERROR("9903", "토큰 서명 오류"),
     JWT_MALFORMED_ERROR("9904", "토큰 형식 오류"),
     JWT_EXPIRED_ERROR("9905", "토큰 만료"),
+    INVALID_INPUT_VALUE("9906", "유효하지 않는 값입니다."),
     UNEXPECTED_ERROR("9999", "알 수 없는 에러")
     ;
 
