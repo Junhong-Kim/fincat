@@ -2,7 +2,6 @@ package com.wagoowagoo.fincat.api.finlife.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeObjectMapper;
@@ -13,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -49,25 +48,28 @@ public class FinlifeService {
      * @param pageNo 페이지 번호
      * @return 금융회사 목록
      */
-    public List<FinlifeObjectMapper.FinanceCompany> getFinanceCompanyList(String topFinGrpNo, int pageNo) {
+    public FinlifeObjectMapper.FinanceCompanyList getFinanceCompanyList(String topFinGrpNo, int pageNo) {
         String apiUrl = createFinlifeApiUrl(topFinGrpNo, null, pageNo, FINANCE_COMPANY);
 
         // api 요청
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
-        List<FinlifeObjectMapper.FinanceCompany> financeCompanyList = new ArrayList<>();
-
         JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
-        JsonArray baseList = result.get(FINLIFE_BASE_LIST).getAsJsonArray();
+
+        FinlifeObjectMapper.FinanceCompanyList financeCompanyList = new FinlifeObjectMapper.FinanceCompanyList(
+                result.get(FINLIFE_TOTAL_COUNT).getAsInt(),
+                result.get(FINLIFE_MAX_PAGE).getAsInt(),
+                result.get(FINLIFE_NOW_PAGE).getAsInt()
+        );
 
         // 회사 정보
-        baseList.forEach(jsonObject -> {
+        result.get(FINLIFE_BASE_LIST).getAsJsonArray().forEach(jsonObject -> {
             try {
                 FinlifeObjectMapper.FinanceCompany financeCompany = objectMapper.readValue(
                         jsonObject.toString(),
                         FinlifeObjectMapper.FinanceCompany.class);
 
-                financeCompanyList.add(financeCompany);
+                financeCompanyList.getData().add(financeCompany);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -103,7 +105,7 @@ public class FinlifeService {
                         jsonObject.toString(),
                         FinlifeObjectMapper.DepositProduct.class);
 
-                depositProductList.getDepositProductMap().put(depositProduct.getFin_prdt_cd(), depositProduct);
+                depositProductList.getData().put(depositProduct.getFin_prdt_cd(), depositProduct);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -116,7 +118,7 @@ public class FinlifeService {
                         jsonObject.toString(),
                         FinlifeObjectMapper.DepositProductOption.class);
 
-                FinlifeObjectMapper.DepositProduct depositProduct = depositProductList.getDepositProductMap().get(depositProductOption.getFin_prdt_cd());
+                FinlifeObjectMapper.DepositProduct depositProduct = depositProductList.getData().get(depositProductOption.getFin_prdt_cd());
                 depositProduct.getOptionList().add(depositProductOption);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -132,45 +134,47 @@ public class FinlifeService {
      * @param pageNo 페이지 번호
      * @return 적금 목록
      */
-    public Map<String, FinlifeObjectMapper.SavingProduct> getSavingProductList(String topFinGrpNo, String financeCd, int pageNo) {
+    public FinlifeObjectMapper.SavingProductList getSavingProductList(String topFinGrpNo, String financeCd, int pageNo) {
         String apiUrl = createFinlifeApiUrl(topFinGrpNo, financeCd, pageNo, SAVING_PRODUCTS);
 
         // api 요청
         ResponseEntity<String> exchange = restTemplate.exchange(apiUrl, HttpMethod.GET, null, String.class);
         JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(exchange.getBody())).getAsJsonObject();
-        HashMap<String, FinlifeObjectMapper.SavingProduct> savingProductMap = new HashMap<>();
-
         JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
-        JsonArray baseList = result.get(FINLIFE_BASE_LIST).getAsJsonArray();
-        JsonArray optionList = result.get(FINLIFE_OPTION_LIST).getAsJsonArray();
+
+        FinlifeObjectMapper.SavingProductList savingProductList = new FinlifeObjectMapper.SavingProductList(
+                result.get(FINLIFE_TOTAL_COUNT).getAsInt(),
+                result.get(FINLIFE_MAX_PAGE).getAsInt(),
+                result.get(FINLIFE_NOW_PAGE).getAsInt()
+        );
 
         // 상품 정보
-        baseList.forEach(jsonObject -> {
+        result.get(FINLIFE_BASE_LIST).getAsJsonArray().forEach(jsonObject -> {
             try {
                 FinlifeObjectMapper.SavingProduct savingProduct = objectMapper.readValue(
                         jsonObject.toString(),
                         FinlifeObjectMapper.SavingProduct.class);
 
-                savingProductMap.put(savingProduct.getFin_prdt_cd(), savingProduct);
+                savingProductList.getData().put(savingProduct.getFin_prdt_cd(), savingProduct);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         });
 
         // 상품 옵션
-        optionList.forEach(jsonObject -> {
+        result.get(FINLIFE_OPTION_LIST).getAsJsonArray().forEach(jsonObject -> {
             try {
                 FinlifeObjectMapper.SavingProductOption savingProductOption = objectMapper.readValue(
                         jsonObject.toString(),
                         FinlifeObjectMapper.SavingProductOption.class);
 
-                FinlifeObjectMapper.SavingProduct depositProduct = savingProductMap.get(savingProductOption.getFin_prdt_cd());
-                depositProduct.getOptionList().add(savingProductOption);
+                FinlifeObjectMapper.SavingProduct savingProduct = savingProductList.getData().get(savingProductOption.getFin_prdt_cd());
+                savingProduct.getOptionList().add(savingProductOption);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         });
-        return savingProductMap;
+        return savingProductList;
     }
 
     /***
@@ -187,7 +191,7 @@ public class FinlifeService {
                 .append("&pageNo=").append(pageNo)
                 .append("&topFinGrpNo=").append(topFinGrpNo);
 
-        if (Optional.ofNullable(financeCd).isPresent()) {
+        if (financeCd != null) {
             apiUrl.append("&financeCd=").append(financeCd);
         }
 

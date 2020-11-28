@@ -1,12 +1,10 @@
 package com.wagoowagoo.fincat.api.finlife.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FinlifeResponse {
 
@@ -15,16 +13,119 @@ public class FinlifeResponse {
     }
 
     @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class DepositProductList implements Serializable {
+    public static class GetFinanceCompany implements Serializable {
+
+        private static final long serialVersionUID = 514348367207038867L;
+
+        private final int totalCount;
+        private final int maxPage;
+        private final int nowPage;
+        private final List<FinlifeDto.FinanceCompany> financeCompanyList;
+
+        public GetFinanceCompany(FinlifeObjectMapper.FinanceCompanyList financeCompanyList) {
+            this.totalCount = financeCompanyList.getTotalCount();
+            this.maxPage = financeCompanyList.getMaxPage();
+            this.nowPage = financeCompanyList.getNowPage();
+            this.financeCompanyList = financeCompanyList.getData().stream().map(obj ->
+                    FinlifeDto.FinanceCompany.builder()
+                            .disclosureMonth(obj.getDcls_month())
+                            .finCompanyCode(obj.getFin_co_no())
+                            .finCompanyName(obj.getKor_co_nm())
+                            .pic(obj.getDcls_chrg_man())
+                            .homepage(obj.getHomp_url())
+                            .tel(obj.getCal_tel())
+                            .build())
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @Getter
+    public static class GetDepositProductList implements Serializable {
 
         private static final long serialVersionUID = -7529838533825460353L;
 
-        private int totalCount;
-        private int maxPage;
-        private int nowPage;
-        private List<FinlifeDto.DepositProduct> data;
+        private final int totalCount;
+        private final int maxPage;
+        private final int nowPage;
+        private final List<FinlifeDto.DepositProduct> depositProductList;
+
+        public GetDepositProductList(FinlifeObjectMapper.DepositProductList depositProductList) {
+                this.totalCount = depositProductList.getTotalCount();
+                this.maxPage = depositProductList.getMaxPage();
+                this.nowPage = depositProductList.getNowPage();
+                this.depositProductList = depositProductList.getData().values().stream().map(value ->
+                            FinlifeDto.DepositProduct.builder()
+                                    .disclosureMonth(value.getDcls_month())
+                                    .finCompanyCode(value.getFin_co_no())
+                                    .finCompanyName(value.getKor_co_nm())
+                                    .productCode(value.getFin_prdt_cd())
+                                    .productName(value.getFin_prdt_nm())
+                                    .joinWay(value.getJoin_way())
+                                    .joinDeny(value.getJoin_deny())
+                                    .joinMember(value.getJoin_member())
+                                    .maturityInterest(value.getMtrt_int())
+                                    .specialCondition(value.getSpcl_cnd())
+                                    .etcNote(value.getEtc_note())
+                                    .maxLimit(value.getMax_limit())
+                                    .disclosureStartAt(value.getDcls_strt_day())
+                                    .disclosureEndAt(value.getDcls_end_day())
+                                    .finCompanySubmissionAt(value.getFin_co_subm_day())
+                                    .optionList(value.getOptionList().stream().map(obj ->
+                                            FinlifeDto.DepositProductOption.builder()
+                                                    .interestRateType(obj.getIntr_rate_type())
+                                                    .interestRateTypeName(obj.getIntr_rate_type_nm())
+                                                    .interestRate(obj.getIntr_rate())
+                                                    .maxInterestRate(obj.getIntr_rate2())
+                                                    .saveTerm(obj.getSave_trm())
+                                                    .build())
+                                            .collect(Collectors.toList()))
+                                    .build())
+                            .collect(Collectors.toList());
+        }
+    }
+
+    @Getter
+    public static class GetSavingProductList implements Serializable {
+
+        private static final long serialVersionUID = -6151966910093686247L;
+
+        private final int totalCount;
+        private final int maxPage;
+        private final int nowPage;
+        private final List<FinlifeDto.SavingProduct> savingProductList;
+
+        public GetSavingProductList(FinlifeObjectMapper.SavingProductList savingProductList) {
+            this.totalCount = savingProductList.getTotalCount();
+            this.maxPage = savingProductList.getMaxPage();
+            this.nowPage = savingProductList.getNowPage();
+            this.savingProductList = savingProductList.getData().values().stream().map(value ->
+                    FinlifeDto.SavingProduct.builder()
+                            .disclosureMonth(value.getDcls_month())
+                            .finCompanyCode(value.getFin_co_no())
+                            .finCompanyName(value.getKor_co_nm())
+                            .productCode(value.getFin_prdt_cd())
+                            .productName(value.getFin_prdt_nm())
+                            .joinWay(value.getJoin_way())
+                            .joinDeny(value.getJoin_deny())
+                            .joinMember(value.getJoin_member())
+                            .maturityInterest(value.getMtrt_int())
+                            .specialCondition(value.getSpcl_cnd())
+                            .etcNote(value.getEtc_note())
+                            .maxLimit(value.getMax_limit())
+                            .disclosureStartAt(value.getDcls_strt_day())
+                            .disclosureEndAt(value.getDcls_end_day())
+                            .finCompanySubmissionAt(value.getFin_co_subm_day())
+                            .optionList(value.getOptionList().stream().map(obj ->
+                                    FinlifeDto.SavingProductOption.builder()
+                                            .interestRateType(obj.getIntr_rate_type())
+                                            .interestRateTypeName(obj.getIntr_rate_type_nm())
+                                            .interestRate(obj.getIntr_rate())
+                                            .maxInterestRate(obj.getIntr_rate2())
+                                            .saveTerm(obj.getSave_trm())
+                                            .build())
+                                    .collect(Collectors.toList()))
+                            .build())
+                    .collect(Collectors.toList());
+        }
     }
 }

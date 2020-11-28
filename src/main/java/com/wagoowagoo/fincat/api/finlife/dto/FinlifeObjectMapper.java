@@ -16,8 +16,19 @@ public class FinlifeObjectMapper {
     }
 
     @Getter
+    @RequiredArgsConstructor
+    public static class FinanceCompanyList {
+
+        private final int totalCount;
+        private final int maxPage;
+        private final int nowPage;
+        private final List<FinanceCompany> data = new ArrayList<>();
+    }
+
+    @Getter
     @Setter
     public static class FinanceCompany {
+
         private String dcls_month;
         private String fin_co_no;
         private String kor_co_nm;
@@ -33,12 +44,13 @@ public class FinlifeObjectMapper {
         private final int totalCount;
         private final int maxPage;
         private final int nowPage;
-        private final Map<String, DepositProduct> depositProductMap = new HashMap<>();
+        private final Map<String, DepositProduct> data = new HashMap<>();
     }
 
     @Getter
     @Setter
     public static class DepositProduct {
+
         private String dcls_month;
         private String fin_co_no;
         private String fin_prdt_cd;
@@ -60,6 +72,7 @@ public class FinlifeObjectMapper {
     @Getter
     @Setter
     public static class DepositProductOption {
+
         private String dcls_month;
         private String fin_co_no;
         private String fin_prdt_cd;
@@ -71,8 +84,19 @@ public class FinlifeObjectMapper {
     }
 
     @Getter
+    @RequiredArgsConstructor
+    public static class SavingProductList {
+
+        private final int totalCount;
+        private final int maxPage;
+        private final int nowPage;
+        private final Map<String, SavingProduct> data = new HashMap<>();
+    }
+
+    @Getter
     @Setter
     public static class SavingProduct {
+
         private String dcls_month;
         private String fin_co_no;
         private String fin_prdt_cd;
@@ -94,6 +118,7 @@ public class FinlifeObjectMapper {
     @Getter
     @Setter
     public static class SavingProductOption {
+
         private String dcls_month;
         private String fin_co_no;
         private String fin_prdt_cd;

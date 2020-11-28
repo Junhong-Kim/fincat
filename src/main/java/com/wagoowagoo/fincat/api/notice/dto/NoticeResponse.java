@@ -5,6 +5,7 @@ import com.wagoowagoo.fincat.api.notice.entity.Notice;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,14 +17,18 @@ public class NoticeResponse {
 
     @Getter
     @RequiredArgsConstructor
-    public static class CreateNotice {
+    public static class CreateNotice implements Serializable {
+
+        private static final long serialVersionUID = 95113416764112413L;
 
         private final long noticeId;
     }
 
     @Getter
     @RequiredArgsConstructor
-    public static class GetNoticeList {
+    public static class GetNoticeList implements Serializable {
+
+        private static final long serialVersionUID = 2155766692853816657L;
 
         private final int totalPages;
         private final long totalElements;
@@ -31,12 +36,12 @@ public class NoticeResponse {
     }
 
     @Getter
-    public static class GetNotice {
+    public static class GetNotice implements Serializable {
+
+        private static final long serialVersionUID = -6162371251085906606L;
 
         private final long noticeId;
-
         private final String title;
-
         private final String contents;
 
         @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
@@ -46,7 +51,6 @@ public class NoticeResponse {
         private final LocalDateTime updatedAt;
 
         private final String createdBy;
-
         private final String updatedBy;
 
         public GetNotice(Notice notice) {

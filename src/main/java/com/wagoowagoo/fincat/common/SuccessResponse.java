@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @JsonInclude(Include.NON_NULL)
-public class SuccessResponse<T> extends BaseResponse implements Serializable {
+public class SuccessResponse<T extends Serializable> extends BaseResponse implements Serializable {
 
     private static final long serialVersionUID = 1921298826463618980L;
 

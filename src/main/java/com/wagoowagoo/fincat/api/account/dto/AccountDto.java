@@ -1,7 +1,6 @@
 package com.wagoowagoo.fincat.api.account.dto;
 
 import com.wagoowagoo.fincat.util.RegxUtil;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,14 +30,8 @@ public class AccountDto {
     @Getter
     @Setter
     public static class LoginAccount {
+
         private String email;
         private String password;
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class LoginResponse {
-        private String accessToken;
     }
 }

@@ -1,6 +1,7 @@
 package com.wagoowagoo.fincat.api.account.controller;
 
 import com.wagoowagoo.fincat.api.account.dto.AccountDto;
+import com.wagoowagoo.fincat.api.account.dto.AccountResponse;
 import com.wagoowagoo.fincat.api.account.repository.AccountRepository;
 import com.wagoowagoo.fincat.api.account.service.AccountService;
 import com.wagoowagoo.fincat.common.BaseResponse;
@@ -44,6 +45,8 @@ public class AccountController {
         }
         UserDetails userDetails = accountService.loadUserByUsername(dto.getEmail());
         String accessToken = JwtUtil.generateToken(userDetails);
-        return new SuccessResponse<>(new AccountDto.LoginResponse(accessToken));
+
+        AccountResponse.LoginAccount response = new AccountResponse.LoginAccount(accessToken);
+        return new SuccessResponse<>(response);
     }
 }
