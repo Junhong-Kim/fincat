@@ -28,8 +28,7 @@ public class FinlifeController {
     @Cacheable(value = "financeCompany", key = "{#dto.topFinGrpNo, #dto.pageNo}")
     @GetMapping("/financeCompany")
     public BaseResponse getFinanceCompany(@Valid FinlifeRequest.FinanceCompany dto) {
-        FinlifeObjectMapper.FinanceCompanyList financeCompanyList = finlifeService.getFinanceCompanyList(
-                dto.getTopFinGrpNo(), dto.getPageNo());
+        FinlifeObjectMapper.FinanceCompanyList financeCompanyList = finlifeService.getFinanceCompanyList(dto);
 
         FinlifeResponse.GetFinanceCompany response = new FinlifeResponse.GetFinanceCompany(financeCompanyList);
         return new SuccessResponse<>(response);
@@ -38,8 +37,7 @@ public class FinlifeController {
     @Cacheable(value = "depositProduct", key = "{#dto.topFinGrpNo, #dto.financeCd, #dto.pageNo}")
     @GetMapping("/depositProduct")
     public BaseResponse getDepositProductList(@Valid FinlifeRequest.ProductList dto) {
-        FinlifeObjectMapper.DepositProductList depositProductList = finlifeService.getDepositProductList(
-                dto.getTopFinGrpNo(), dto.getFinanceCd(), dto.getPageNo());
+        FinlifeObjectMapper.DepositProductList depositProductList = finlifeService.getDepositProductList(dto);
 
         FinlifeResponse.GetDepositProductList response = new FinlifeResponse.GetDepositProductList(depositProductList);
         return new SuccessResponse<>(response);
@@ -48,8 +46,7 @@ public class FinlifeController {
     @Cacheable(value = "savingProduct", key = "{#dto.topFinGrpNo, #dto.financeCd, #dto.pageNo}")
     @GetMapping("/savingProduct")
     public BaseResponse getSavingProductList(@Valid FinlifeRequest.ProductList dto) {
-        FinlifeObjectMapper.SavingProductList savingProductList =  finlifeService.getSavingProductList(
-                dto.getTopFinGrpNo(), dto.getFinanceCd(), dto.getPageNo());
+        FinlifeObjectMapper.SavingProductList savingProductList =  finlifeService.getSavingProductList(dto);
 
         FinlifeResponse.GetSavingProductList  response = new FinlifeResponse.GetSavingProductList(savingProductList);
         return new SuccessResponse<>(response);
