@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,12 +38,9 @@ public class FinlifeObjectMapper {
 
     @Getter
     @RequiredArgsConstructor
-    public static class DepositProductList {
+    public static class DepositProductMap {
 
-        private final int totalCount;
-        private final int maxPage;
-        private final int nowPage;
-        private final Map<String, DepositProduct> data = new HashMap<>();
+        private final Map<String, DepositProduct> data;
     }
 
     @Getter
@@ -85,12 +81,9 @@ public class FinlifeObjectMapper {
 
     @Getter
     @RequiredArgsConstructor
-    public static class SavingProductList {
+    public static class SavingProductMap {
 
-        private final int totalCount;
-        private final int maxPage;
-        private final int nowPage;
-        private final Map<String, SavingProduct> data = new HashMap<>();
+        private final Map<String, SavingProduct> data;
     }
 
     @Getter

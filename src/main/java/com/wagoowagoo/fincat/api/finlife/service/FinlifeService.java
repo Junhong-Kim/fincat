@@ -10,6 +10,8 @@ import com.wagoowagoo.fincat.feign.FinlifeFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -61,87 +63,95 @@ public class FinlifeService {
      * 정기예금 목록 조회
      * @return 정기예금 목록
      */
-    public FinlifeObjectMapper.DepositProductList getDepositProductList(FinlifeRequest.ProductList dto) {
-        String stringResponse = finlifeFeignClient.getDepositProductList(FINLIFE_AUTH, dto.getTopFinGrpNo(), dto.getFinanceCd(), dto.getPageNo());
-        JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(stringResponse)).getAsJsonObject();
-        JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
+    public FinlifeObjectMapper.DepositProductMap getDepositProductMap(FinlifeRequest.ProductList dto) {
+        int maxPage;
+        int nowPage = 1;
+        Map<String, FinlifeObjectMapper.DepositProduct> productMap = new HashMap<>();
 
-        FinlifeObjectMapper.DepositProductList depositProductList = new FinlifeObjectMapper.DepositProductList(
-                result.get(FINLIFE_TOTAL_COUNT).getAsInt(),
-                result.get(FINLIFE_MAX_PAGE).getAsInt(),
-                result.get(FINLIFE_NOW_PAGE).getAsInt()
-        );
+        do {
+            String stringResponse = finlifeFeignClient.getAllDepositProductList(FINLIFE_AUTH, dto.getTopFinGrpNo(), nowPage);
+            JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(stringResponse)).getAsJsonObject();
+            JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
+            maxPage = result.get(FINLIFE_MAX_PAGE).getAsInt();
 
-        // 상품 정보
-        result.get(FINLIFE_BASE_LIST).getAsJsonArray().forEach(jsonObject -> {
-            try {
-                FinlifeObjectMapper.DepositProduct depositProduct = objectMapper.readValue(
-                        jsonObject.toString(),
-                        FinlifeObjectMapper.DepositProduct.class);
+            // 상품 정보
+            result.get(FINLIFE_BASE_LIST).getAsJsonArray().forEach(jsonObject -> {
+                try {
+                    FinlifeObjectMapper.DepositProduct depositProduct = objectMapper.readValue(
+                            jsonObject.toString(),
+                            FinlifeObjectMapper.DepositProduct.class);
 
-                depositProductList.getData().put(depositProduct.getFin_prdt_cd(), depositProduct);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        });
+                    productMap.put(depositProduct.getFin_prdt_cd(), depositProduct);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            });
 
-        // 상품 옵션
-        result.get(FINLIFE_OPTION_LIST).getAsJsonArray().forEach(jsonObject -> {
-            try {
-                FinlifeObjectMapper.DepositProductOption depositProductOption = objectMapper.readValue(
-                        jsonObject.toString(),
-                        FinlifeObjectMapper.DepositProductOption.class);
+            // 상품 옵션
+            result.get(FINLIFE_OPTION_LIST).getAsJsonArray().forEach(jsonObject -> {
+                try {
+                    FinlifeObjectMapper.DepositProductOption depositProductOption = objectMapper.readValue(
+                            jsonObject.toString(),
+                            FinlifeObjectMapper.DepositProductOption.class);
 
-                FinlifeObjectMapper.DepositProduct depositProduct = depositProductList.getData().get(depositProductOption.getFin_prdt_cd());
-                depositProduct.getOptionList().add(depositProductOption);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        });
-        return depositProductList;
+                    FinlifeObjectMapper.DepositProduct depositProduct = productMap.get(depositProductOption.getFin_prdt_cd());
+                    depositProduct.getOptionList().add(depositProductOption);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            nowPage++;
+        } while (nowPage <= maxPage);
+
+        return new FinlifeObjectMapper.DepositProductMap(productMap);
     }
 
     /***
      * 적금 목록 조회
      * @return 적금 목록
      */
-    public FinlifeObjectMapper.SavingProductList getSavingProductList(FinlifeRequest.ProductList dto) {
-        String stringResponse = finlifeFeignClient.getSavingProductList(FINLIFE_AUTH, dto.getTopFinGrpNo(), dto.getFinanceCd(), dto.getPageNo());
-        JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(stringResponse)).getAsJsonObject();
-        JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
+    public FinlifeObjectMapper.SavingProductMap getSavingProductMap(FinlifeRequest.ProductList dto) {
+        int maxPage;
+        int nowPage = 1;
+        Map<String, FinlifeObjectMapper.SavingProduct> productMap = new HashMap<>();
 
-        FinlifeObjectMapper.SavingProductList savingProductList = new FinlifeObjectMapper.SavingProductList(
-                result.get(FINLIFE_TOTAL_COUNT).getAsInt(),
-                result.get(FINLIFE_MAX_PAGE).getAsInt(),
-                result.get(FINLIFE_NOW_PAGE).getAsInt()
-        );
+        do {
+            String stringResponse = finlifeFeignClient.getAllSavingProductList(FINLIFE_AUTH, dto.getTopFinGrpNo(), nowPage);
+            JsonObject jsonResponse = JsonParser.parseString(Objects.requireNonNull(stringResponse)).getAsJsonObject();
+            JsonObject result = jsonResponse.get(FINLIFE_RESULT).getAsJsonObject();
+            maxPage = result.get(FINLIFE_MAX_PAGE).getAsInt();
 
-        // 상품 정보
-        result.get(FINLIFE_BASE_LIST).getAsJsonArray().forEach(jsonObject -> {
-            try {
-                FinlifeObjectMapper.SavingProduct savingProduct = objectMapper.readValue(
-                        jsonObject.toString(),
-                        FinlifeObjectMapper.SavingProduct.class);
+            // 상품 정보
+            result.get(FINLIFE_BASE_LIST).getAsJsonArray().forEach(jsonObject -> {
+                try {
+                    FinlifeObjectMapper.SavingProduct savingProduct = objectMapper.readValue(
+                            jsonObject.toString(),
+                            FinlifeObjectMapper.SavingProduct.class);
 
-                savingProductList.getData().put(savingProduct.getFin_prdt_cd(), savingProduct);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        });
+                    productMap.put(savingProduct.getFin_prdt_cd(), savingProduct);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            });
 
-        // 상품 옵션
-        result.get(FINLIFE_OPTION_LIST).getAsJsonArray().forEach(jsonObject -> {
-            try {
-                FinlifeObjectMapper.SavingProductOption savingProductOption = objectMapper.readValue(
-                        jsonObject.toString(),
-                        FinlifeObjectMapper.SavingProductOption.class);
+            // 상품 옵션
+            result.get(FINLIFE_OPTION_LIST).getAsJsonArray().forEach(jsonObject -> {
+                try {
+                    FinlifeObjectMapper.SavingProductOption savingProductOption = objectMapper.readValue(
+                            jsonObject.toString(),
+                            FinlifeObjectMapper.SavingProductOption.class);
 
-                FinlifeObjectMapper.SavingProduct savingProduct = savingProductList.getData().get(savingProductOption.getFin_prdt_cd());
-                savingProduct.getOptionList().add(savingProductOption);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        });
-        return savingProductList;
+                    FinlifeObjectMapper.SavingProduct savingProduct = productMap.get(savingProductOption.getFin_prdt_cd());
+                    savingProduct.getOptionList().add(savingProductOption);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            nowPage++;
+        } while (nowPage <= maxPage);
+
+        return new FinlifeObjectMapper.SavingProductMap(productMap);
     }
 }

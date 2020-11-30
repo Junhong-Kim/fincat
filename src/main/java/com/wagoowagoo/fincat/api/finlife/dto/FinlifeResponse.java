@@ -45,15 +45,11 @@ public class FinlifeResponse {
         private static final long serialVersionUID = -7529838533825460353L;
 
         private final int totalCount;
-        private final int maxPage;
-        private final int nowPage;
         private final List<FinlifeDto.DepositProduct> depositProductList;
 
-        public GetDepositProductList(FinlifeObjectMapper.DepositProductList depositProductList) {
-                this.totalCount = depositProductList.getTotalCount();
-                this.maxPage = depositProductList.getMaxPage();
-                this.nowPage = depositProductList.getNowPage();
-                this.depositProductList = depositProductList.getData().values().stream().map(value ->
+        public GetDepositProductList(FinlifeObjectMapper.DepositProductMap depositProductMap) {
+                this.totalCount = depositProductMap.getData().size();
+                this.depositProductList = depositProductMap.getData().values().stream().map(value ->
                             FinlifeDto.DepositProduct.builder()
                                     .disclosureMonth(value.getDcls_month())
                                     .finCompanyCode(value.getFin_co_no())
@@ -90,15 +86,11 @@ public class FinlifeResponse {
         private static final long serialVersionUID = -6151966910093686247L;
 
         private final int totalCount;
-        private final int maxPage;
-        private final int nowPage;
         private final List<FinlifeDto.SavingProduct> savingProductList;
 
-        public GetSavingProductList(FinlifeObjectMapper.SavingProductList savingProductList) {
-            this.totalCount = savingProductList.getTotalCount();
-            this.maxPage = savingProductList.getMaxPage();
-            this.nowPage = savingProductList.getNowPage();
-            this.savingProductList = savingProductList.getData().values().stream().map(value ->
+        public GetSavingProductList(FinlifeObjectMapper.SavingProductMap savingProductMap) {
+            this.totalCount = savingProductMap.getData().size();
+            this.savingProductList = savingProductMap.getData().values().stream().map(value ->
                     FinlifeDto.SavingProduct.builder()
                             .disclosureMonth(value.getDcls_month())
                             .finCompanyCode(value.getFin_co_no())

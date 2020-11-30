@@ -32,8 +32,6 @@ public class FinlifeRequest {
         @Nullable
         private String financeCd;
 
-        private int pageNo = 1;
-
         @Nullable
         private String interestRateType;
 
