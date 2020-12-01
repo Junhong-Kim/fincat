@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -81,7 +82,9 @@ public class FinlifeService {
                             jsonObject.toString(),
                             FinlifeObjectMapper.DepositProduct.class);
 
-                    productMap.put(depositProduct.getFin_prdt_cd(), depositProduct);
+                    // 상품 정보 필터
+                    if (dto.getFinanceCdList() == null || dto.getFinanceCdList().contains(depositProduct.getFin_co_no()))
+                        productMap.put(depositProduct.getFin_prdt_cd(), depositProduct);
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }
@@ -94,8 +97,9 @@ public class FinlifeService {
                             jsonObject.toString(),
                             FinlifeObjectMapper.DepositProductOption.class);
 
-                    FinlifeObjectMapper.DepositProduct depositProduct = productMap.get(depositProductOption.getFin_prdt_cd());
-                    depositProduct.getOptionList().add(depositProductOption);
+                    // 상품 옵션 필터
+                    Optional.ofNullable(productMap.get(depositProductOption.getFin_prdt_cd()))
+                            .ifPresent(map -> map.getOptionList().add(depositProductOption));
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }

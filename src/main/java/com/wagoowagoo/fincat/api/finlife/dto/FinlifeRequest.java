@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public class FinlifeRequest {
 
@@ -30,7 +31,7 @@ public class FinlifeRequest {
         private String topFinGrpNo;
 
         @Nullable
-        private String financeCd;
+        private List<String> financeCdList;
 
         @Nullable
         private String interestRateType;
