@@ -10,10 +10,7 @@ import com.wagoowagoo.fincat.feign.FinlifeFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -97,7 +94,7 @@ public class FinlifeService {
                             jsonObject.toString(),
                             FinlifeObjectMapper.DepositProductOption.class);
 
-                    // 상품 옵션 필터
+                    // 상품 정보 <-> 상품 옵션 매칭
                     Optional.ofNullable(productMap.get(depositProductOption.getFin_prdt_cd()))
                             .ifPresent(map -> map.getOptionList().add(depositProductOption));
                 } catch (JsonProcessingException e) {
@@ -108,7 +105,36 @@ public class FinlifeService {
             nowPage++;
         } while (nowPage <= maxPage);
 
-        return new FinlifeObjectMapper.DepositProductMap(productMap);
+        // 상품 옵션 필터
+        Map<String, FinlifeObjectMapper.DepositProduct> depositProductMapWithOption = getDepositProductMapWithOption(productMap, dto);
+        return new FinlifeObjectMapper.DepositProductMap(depositProductMapWithOption);
+    }
+
+    /***
+     * 옵션으로 정기예금 목록 조회
+     * @return 정기예금 목록
+     */
+    private Map<String, FinlifeObjectMapper.DepositProduct> getDepositProductMapWithOption(Map<String, FinlifeObjectMapper.DepositProduct> productMap,
+                                                                                           FinlifeRequest.ProductList dto) {
+        Map<String, FinlifeObjectMapper.DepositProduct> productMapWithOption = new HashMap<>();
+        productMap.forEach((key, value) -> {
+            List<FinlifeObjectMapper.DepositProductOption> optionList = value.getOptionList();
+            if (optionList.stream().anyMatch(option -> filteringDepositProductMap(option, dto))) {
+                productMapWithOption.put(key, value);
+            }
+        });
+        return productMapWithOption;
+    }
+
+    /***
+     * 정기예금 필터링 조건
+     * @return 필터링 결과
+     */
+    private boolean filteringDepositProductMap(FinlifeObjectMapper.DepositProductOption option, FinlifeRequest.ProductList dto) {
+        return (Objects.requireNonNull(dto.getSaveTermList()).contains(option.getSave_trm())) &&
+               (Objects.requireNonNull(dto.getInterestRateTypeList()).contains(option.getIntr_rate_type())) &&
+               (dto.getInterestRate() <= option.getIntr_rate()) &&
+               (dto.getMaxInterestRate() <= option.getIntr_rate2());
     }
 
     /***
