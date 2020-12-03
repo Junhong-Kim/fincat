@@ -114,8 +114,10 @@ public class FinlifeService {
      * 옵션으로 정기예금 목록 조회
      * @return 정기예금 목록
      */
-    private Map<String, FinlifeObjectMapper.DepositProduct> getDepositProductMapWithOption(Map<String, FinlifeObjectMapper.DepositProduct> productMap,
-                                                                                           FinlifeRequest.ProductList dto) {
+    private Map<String, FinlifeObjectMapper.DepositProduct> getDepositProductMapWithOption(
+            Map<String, FinlifeObjectMapper.DepositProduct> productMap,
+            FinlifeRequest.ProductList dto)
+    {
         Map<String, FinlifeObjectMapper.DepositProduct> productMapWithOption = new HashMap<>();
         productMap.forEach((key, value) -> {
             List<FinlifeObjectMapper.DepositProductOption> optionList = value.getOptionList();
@@ -159,7 +161,8 @@ public class FinlifeService {
                             jsonObject.toString(),
                             FinlifeObjectMapper.SavingProduct.class);
 
-                    productMap.put(savingProduct.getFin_prdt_cd(), savingProduct);
+                    if (dto.getFinanceCdList() == null || dto.getFinanceCdList().contains(savingProduct.getFin_co_no()))
+                        productMap.put(savingProduct.getFin_prdt_cd(), savingProduct);
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }
@@ -172,8 +175,9 @@ public class FinlifeService {
                             jsonObject.toString(),
                             FinlifeObjectMapper.SavingProductOption.class);
 
-                    FinlifeObjectMapper.SavingProduct savingProduct = productMap.get(savingProductOption.getFin_prdt_cd());
-                    savingProduct.getOptionList().add(savingProductOption);
+                    // 상품 정보 <-> 상품 옵션 매칭
+                    Optional.ofNullable(productMap.get(savingProductOption.getFin_prdt_cd()))
+                            .ifPresent(map -> map.getOptionList().add(savingProductOption));
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }
@@ -182,6 +186,37 @@ public class FinlifeService {
             nowPage++;
         } while (nowPage <= maxPage);
 
-        return new FinlifeObjectMapper.SavingProductMap(productMap);
+        // 상품 옵션 필터
+        Map<String, FinlifeObjectMapper.SavingProduct> savingProductMapWithOption = getSavingProductMapWithOption(productMap, dto);
+        return new FinlifeObjectMapper.SavingProductMap(savingProductMapWithOption);
+    }
+
+    /***
+     * 옵션으로 적금 목록 조회
+     * @return 적금 목록
+     */
+    private Map<String, FinlifeObjectMapper.SavingProduct> getSavingProductMapWithOption(
+            Map<String, FinlifeObjectMapper.SavingProduct> productMap,
+            FinlifeRequest.ProductList dto)
+    {
+        Map<String, FinlifeObjectMapper.SavingProduct> savingProductMapWithOption = new HashMap<>();
+        productMap.forEach((key, value) -> {
+            List<FinlifeObjectMapper.SavingProductOption> optionList = value.getOptionList();
+            if (optionList.stream().anyMatch(option -> filteringSavingProductMap(option, dto))) {
+                savingProductMapWithOption.put(key, value);
+            }
+        });
+        return savingProductMapWithOption;
+    }
+
+    /***
+     * 적금 필터링 조건
+     * @return 필터링 결과
+     */
+    private boolean filteringSavingProductMap(FinlifeObjectMapper.SavingProductOption option, FinlifeRequest.ProductList dto) {
+        return (Objects.requireNonNull(dto.getSaveTermList()).contains(option.getSave_trm())) &&
+               (Objects.requireNonNull(dto.getInterestRateTypeList()).contains(option.getIntr_rate_type())) &&
+               (dto.getInterestRate() <= option.getIntr_rate()) &&
+               (dto.getMaxInterestRate() <= option.getIntr_rate2());
     }
 }
