@@ -37,18 +37,18 @@ public class FinlifeController {
 //    @Cacheable(value = "depositProduct", key = "{#dto.topFinGrpNo, #dto.financeCd, #dto.pageNo}")
     @GetMapping("/depositProduct")
     public BaseResponse getDepositProductList(@Valid FinlifeRequest.ProductList dto) {
-        FinlifeObjectMapper.DepositProductMap depositProductMap = finlifeService.getDepositProductMap(dto);
+        FinlifeObjectMapper.GeneralProductMap generalProductMap = finlifeService.getGeneralProductMap(dto, "DEPOSIT");
 
-        FinlifeResponse.GetDepositProductList response = new FinlifeResponse.GetDepositProductList(depositProductMap);
+        FinlifeResponse.GetGeneralProductList response = new FinlifeResponse.GetGeneralProductList(generalProductMap);
         return new SuccessResponse<>(response);
     }
 
 //    @Cacheable(value = "savingProduct", key = "{#dto.topFinGrpNo, #dto.financeCd, #dto.pageNo}")
     @GetMapping("/savingProduct")
     public BaseResponse getSavingProductList(@Valid FinlifeRequest.ProductList dto) {
-        FinlifeObjectMapper.SavingProductMap savingProductMap = finlifeService.getSavingProductMap(dto);
+        FinlifeObjectMapper.GeneralProductMap generalProductMap = finlifeService.getGeneralProductMap(dto, "SAVING");
 
-        FinlifeResponse.GetSavingProductList  response = new FinlifeResponse.GetSavingProductList(savingProductMap);
+        FinlifeResponse.GetGeneralProductList response = new FinlifeResponse.GetGeneralProductList(generalProductMap);
         return new SuccessResponse<>(response);
     }
 }
