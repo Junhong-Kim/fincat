@@ -91,9 +91,9 @@ public class FinlifeService {
     private String getGeneralProductList(String topFinGrpNo, int nowPage, ProductType type) {
         switch (type) {
             case DEPOSIT:
-                return finlifeFeignClient.getAllDepositProductList(FINLIFE_AUTH, topFinGrpNo, nowPage);
+                return finlifeFeignClient.getDepositProductList(FINLIFE_AUTH, topFinGrpNo, nowPage, null);
             case SAVING:
-                return finlifeFeignClient.getAllSavingProductList(FINLIFE_AUTH, topFinGrpNo, nowPage);
+                return finlifeFeignClient.getSavingProductList(FINLIFE_AUTH, topFinGrpNo, nowPage, null);
             default:
                 throw new ApiException(ErrorCode.INVALID_INPUT_VALUE);
         }

@@ -17,25 +17,13 @@ public interface FinlifeFeignClient {
     String getDepositProductList(
             @RequestParam("auth") String auth,
             @RequestParam("topFinGrpNo") String topFinGrpNo,
-            @RequestParam("financeCd") String financeCd,
-            @RequestParam("pageNo") int pageNo);
-
-    @GetMapping("/depositProductsSearch.json")
-    String getAllDepositProductList(
-            @RequestParam("auth") String auth,
-            @RequestParam("topFinGrpNo") String topFinGrpNo,
-            @RequestParam("pageNo") int pageNo);
+            @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+            @RequestParam(value = "financeCd", required = false) String financeCd);
 
     @GetMapping("/savingProductsSearch.json")
     String getSavingProductList(
             @RequestParam("auth") String auth,
             @RequestParam("topFinGrpNo") String topFinGrpNo,
-            @RequestParam("financeCd") String financeCd,
-            @RequestParam("pageNo") int pageNo);
-
-    @GetMapping("/savingProductsSearch.json")
-    String getAllSavingProductList(
-            @RequestParam("auth") String auth,
-            @RequestParam("topFinGrpNo") String topFinGrpNo,
-            @RequestParam("pageNo") int pageNo);
+            @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+            @RequestParam(value = "financeCd", required = false) String financeCd);
 }
