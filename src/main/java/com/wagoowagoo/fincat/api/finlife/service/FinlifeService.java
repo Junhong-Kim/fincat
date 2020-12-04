@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.wagoowagoo.fincat.api.common.type.ProductType;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeObjectMapper;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeRequest;
 import com.wagoowagoo.fincat.common.ErrorCode;
@@ -63,7 +64,7 @@ public class FinlifeService {
      * 예/적금 목록 조회
      * @return 예/적금 목록
      */
-    public FinlifeObjectMapper.GeneralProductMap getGeneralProductMap(FinlifeRequest.ProductList dto, String type) {
+    public FinlifeObjectMapper.GeneralProductMap getGeneralProductMap(FinlifeRequest.ProductList dto, ProductType type) {
         int maxPage;
         int nowPage = 1;
         Map<String, FinlifeObjectMapper.GeneralProduct> productMap = new HashMap<>();
@@ -87,11 +88,11 @@ public class FinlifeService {
     /**
      * 예/적금 전체 목록 조회
      */
-    private String getGeneralProductList(String topFinGrpNo, int nowPage, String type) {
+    private String getGeneralProductList(String topFinGrpNo, int nowPage, ProductType type) {
         switch (type) {
-            case "DEPOSIT":
+            case DEPOSIT:
                 return finlifeFeignClient.getAllDepositProductList(FINLIFE_AUTH, topFinGrpNo, nowPage);
-            case "SAVING":
+            case SAVING:
                 return finlifeFeignClient.getAllSavingProductList(FINLIFE_AUTH, topFinGrpNo, nowPage);
             default:
                 throw new ApiException(ErrorCode.INVALID_INPUT_VALUE);

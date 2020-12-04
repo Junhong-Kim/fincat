@@ -1,5 +1,6 @@
 package com.wagoowagoo.fincat.api.finlife.controller;
 
+import com.wagoowagoo.fincat.api.common.type.ProductType;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeObjectMapper;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeRequest;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeResponse;
@@ -37,7 +38,7 @@ public class FinlifeController {
 //    @Cacheable(value = "depositProduct", key = "{#dto.topFinGrpNo, #dto.financeCd, #dto.pageNo}")
     @GetMapping("/depositProduct")
     public BaseResponse getDepositProductList(@Valid FinlifeRequest.ProductList dto) {
-        FinlifeObjectMapper.GeneralProductMap generalProductMap = finlifeService.getGeneralProductMap(dto, "DEPOSIT");
+        FinlifeObjectMapper.GeneralProductMap generalProductMap = finlifeService.getGeneralProductMap(dto, ProductType.DEPOSIT);
 
         FinlifeResponse.GetGeneralProductList response = new FinlifeResponse.GetGeneralProductList(generalProductMap);
         return new SuccessResponse<>(response);
@@ -46,7 +47,7 @@ public class FinlifeController {
 //    @Cacheable(value = "savingProduct", key = "{#dto.topFinGrpNo, #dto.financeCd, #dto.pageNo}")
     @GetMapping("/savingProduct")
     public BaseResponse getSavingProductList(@Valid FinlifeRequest.ProductList dto) {
-        FinlifeObjectMapper.GeneralProductMap generalProductMap = finlifeService.getGeneralProductMap(dto, "SAVING");
+        FinlifeObjectMapper.GeneralProductMap generalProductMap = finlifeService.getGeneralProductMap(dto, ProductType.SAVING);
 
         FinlifeResponse.GetGeneralProductList response = new FinlifeResponse.GetGeneralProductList(generalProductMap);
         return new SuccessResponse<>(response);
