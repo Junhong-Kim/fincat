@@ -65,6 +65,15 @@ public class FinlifeService {
      * @return 예/적금 목록
      */
     public FinlifeObjectMapper.GeneralProductMap getGeneralProductMap(FinlifeRequest.ProductList dto, ProductType type) {
+        Map<String, FinlifeObjectMapper.GeneralProduct> productMap = getAllGeneralProductMap(dto, type);
+        Map<String, FinlifeObjectMapper.GeneralProduct> filteredGeneralProduct = filteringGeneralProductWithOption(productMap, dto);
+        return new FinlifeObjectMapper.GeneralProductMap(filteredGeneralProduct);
+    }
+
+    /**
+     * 예/적금 전체 목록 조회
+     */
+    private Map<String, FinlifeObjectMapper.GeneralProduct> getAllGeneralProductMap(FinlifeRequest.ProductList dto, ProductType type) {
         int maxPage;
         int nowPage = 1;
         Map<String, FinlifeObjectMapper.GeneralProduct> productMap = new HashMap<>();
@@ -81,12 +90,11 @@ public class FinlifeService {
             nowPage++;
         } while (nowPage <= maxPage);
 
-        Map<String, FinlifeObjectMapper.GeneralProduct> filteredGeneralProduct = filteringGeneralProductWithOption(productMap, dto);
-        return new FinlifeObjectMapper.GeneralProductMap(filteredGeneralProduct);
+        return productMap;
     }
 
     /**
-     * 예/적금 전체 목록 조회
+     * 예/적금 목록 조회
      */
     private String getGeneralProductList(String topFinGrpNo, int nowPage, ProductType type) {
         switch (type) {
