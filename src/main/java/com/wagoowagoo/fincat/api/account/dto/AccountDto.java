@@ -1,7 +1,6 @@
 package com.wagoowagoo.fincat.api.account.dto;
 
 import com.wagoowagoo.fincat.util.RegxUtil;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +15,6 @@ public class AccountDto {
 
     @Getter
     @Setter
-    @Builder
     public static class CreateAccountWithEmail {
 
         @NotBlank

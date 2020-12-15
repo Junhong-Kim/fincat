@@ -4,7 +4,9 @@ import com.wagoowagoo.fincat.api.account.dto.AccountDto;
 import com.wagoowagoo.fincat.api.account.entity.Account;
 import com.wagoowagoo.fincat.api.account.entity.AccountType;
 import com.wagoowagoo.fincat.api.account.repository.AccountRepository;
+import com.wagoowagoo.fincat.common.ErrorCode;
 import com.wagoowagoo.fincat.config.SecurityAccount;
+import com.wagoowagoo.fincat.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,7 +33,7 @@ public class AccountService implements UserDetailsService {
      */
     public Account createAccount(AccountDto.CreateAccountWithEmail dto) {
         accountRepository.findByEmail(dto.getEmail()).ifPresent(account -> {
-            throw new RuntimeException(String.format("[%s] 이미 존재하는 이메일 계정입니다.", account.getEmail())); // TODO: 사용자 정의 예외처리
+            throw new ApiException(ErrorCode.DUPLICATE_EMAIL_ACCOUNT);
         });
         return Account.builder()
                 .accountType(AccountType.EMAIL.getValue())
