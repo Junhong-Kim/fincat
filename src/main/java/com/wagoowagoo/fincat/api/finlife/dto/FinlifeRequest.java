@@ -50,5 +50,8 @@ public class FinlifeRequest {
 
         @Min(value = 0)
         private double maxInterestRate;
+
+        @Nullable
+        private String productName;
     }
 }

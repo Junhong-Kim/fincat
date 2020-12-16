@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +67,13 @@ public class FinlifeService {
      */
     public FinlifeObjectMapper.GeneralProductMap getGeneralProductMap(FinlifeRequest.ProductList dto, ProductType type) {
         Map<String, FinlifeObjectMapper.GeneralProduct> productMap = getAllGeneralProductMap(dto, type);
-        Map<String, FinlifeObjectMapper.GeneralProduct> filteredGeneralProduct = filteringGeneralProductWithOption(productMap, dto);
+        Map<String, FinlifeObjectMapper.GeneralProduct> filteredGeneralProduct;
+
+        if (dto.getProductName() != null)
+            filteredGeneralProduct = filteringGeneralProductByProductName(productMap, dto.getProductName());
+        else
+            filteredGeneralProduct = filteringGeneralProductWithOption(productMap, dto);
+
         return new FinlifeObjectMapper.GeneralProductMap(filteredGeneralProduct);
     }
 
@@ -148,6 +155,19 @@ public class FinlifeService {
                 e.printStackTrace();
             }
         });
+    }
+
+    /**
+     * 상품명으로 예/적금 목록 필터링
+     * @return 예/적금 목록
+     */
+    private Map<String, FinlifeObjectMapper.GeneralProduct> filteringGeneralProductByProductName(
+            Map<String, FinlifeObjectMapper.GeneralProduct> productMap,
+            String productName)
+    {
+        return productMap.entrySet().stream()
+                .filter(entry -> entry.getValue().getFin_prdt_nm().contains(productName))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**
