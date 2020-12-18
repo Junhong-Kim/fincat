@@ -10,6 +10,8 @@ public enum ProductType {
     DEPOSIT("정기예금", "DEPOSIT"),
     SAVING("적금", "SAVING");
 
+    public static final String REGEX = "DEPOSIT|SAVING";
+
     private final String name;
     private final String value;
 }

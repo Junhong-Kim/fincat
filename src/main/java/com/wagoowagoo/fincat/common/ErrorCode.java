@@ -11,6 +11,7 @@ public enum ErrorCode {
     // ACCOUNT [01xx]
     LOGIN_FAIL("0101", "로그인 실패"),
     DUPLICATE_EMAIL_ACCOUNT("0102", "이미 존재하는 이메일 계정입니다."),
+    NOT_FOUND_EMAIL_ACCOUNT("0103", "존재하지 않는 이메일 계정입니다."),
 
     // NOTICE [02xx]
     NOT_FOUND_NOTICE("0201", "공지사항을 찾을 수 없습니다."),

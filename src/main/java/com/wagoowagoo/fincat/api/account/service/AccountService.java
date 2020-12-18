@@ -41,4 +41,10 @@ public class AccountService implements UserDetailsService {
                 .password(dto.getPassword())
                 .build();
     }
+
+    public Account getAccountByEmail(String username) {
+        return accountRepository
+                .findByEmail(username)
+                .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND_EMAIL_ACCOUNT));
+    }
 }

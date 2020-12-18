@@ -2,7 +2,6 @@ package com.wagoowagoo.fincat.api.product.entity;
 
 import com.wagoowagoo.fincat.api.account.entity.Account;
 import com.wagoowagoo.fincat.api.common.entity.BaseEntity;
-import com.wagoowagoo.fincat.api.common.type.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +25,7 @@ public class ProductBookmark extends BaseEntity {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    private ProductType productType;
+    private String productType;
 
     private String productCode;
 
