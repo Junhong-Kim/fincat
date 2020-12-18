@@ -7,6 +7,7 @@ import com.wagoowagoo.fincat.api.account.repository.AccountRepository;
 import com.wagoowagoo.fincat.common.ErrorCode;
 import com.wagoowagoo.fincat.config.SecurityAccount;
 import com.wagoowagoo.fincat.exception.ApiException;
+import com.wagoowagoo.fincat.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,9 +43,17 @@ public class AccountService implements UserDetailsService {
                 .build();
     }
 
-    public Account getAccountByEmail(String username) {
+    /**
+     * accessToken으로 Account 조회
+     */
+    public Account getAccount(String accessToken) {
+        String email = JwtUtil.extractUsername(accessToken); // FIXME: extractAccountId로 변경
+        return getAccountByEmail(email);
+    }
+
+    private Account getAccountByEmail(String email) {
         return accountRepository
-                .findByEmail(username)
+                .findByEmail(email)
                 .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND_EMAIL_ACCOUNT));
     }
 }
