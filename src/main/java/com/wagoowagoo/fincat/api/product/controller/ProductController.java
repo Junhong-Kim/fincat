@@ -8,10 +8,7 @@ import com.wagoowagoo.fincat.common.BaseResponse;
 import com.wagoowagoo.fincat.common.SuccessResponse;
 import com.wagoowagoo.fincat.util.RequestUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +26,18 @@ public class ProductController {
         Account account = accountService.getAccount(accessToken);
 
         productService.createBookmark(account, dto);
+        return new SuccessResponse<>();
+    }
+
+    @DeleteMapping("/bookmark/{bookmarkId}")
+    public BaseResponse deleteBookmark(
+            HttpServletRequest request,
+            @PathVariable("bookmarkId") long bookmarkId)
+    {
+        String accessToken = RequestUtil.getAccessToken(request);
+        Account account = accountService.getAccount(accessToken);
+
+        productService.deleteBookmark(account, bookmarkId);
         return new SuccessResponse<>();
     }
 }

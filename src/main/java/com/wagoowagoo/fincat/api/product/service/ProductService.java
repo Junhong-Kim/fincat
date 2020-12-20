@@ -25,4 +25,9 @@ public class ProductService {
                 .build();
         productBookmarkRepository.save(productBookmark);
     }
+
+    @Transactional
+    public void deleteBookmark(Account account, long bookmarkId) {
+        productBookmarkRepository.deleteBookmark(account, bookmarkId);
+    }
 }
