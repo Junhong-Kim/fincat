@@ -25,7 +25,8 @@ public class ProductBookmark extends BaseEntity {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    private String productType;
+    @Enumerated(EnumType.STRING)
+    private ProductType productType;
 
     private String productCode;
 

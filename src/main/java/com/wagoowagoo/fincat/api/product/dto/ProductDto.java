@@ -1,11 +1,10 @@
 package com.wagoowagoo.fincat.api.product.dto;
 
-import com.wagoowagoo.fincat.api.common.type.ProductType;
+import com.wagoowagoo.fincat.api.product.entity.ProductType;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 public class ProductDto {
 
@@ -17,8 +16,7 @@ public class ProductDto {
     @Setter
     public static class CreateBookmark {
 
-        @Pattern(regexp = ProductType.REGEX)
-        private String productType;
+        private ProductType productType;
 
         @NotBlank
         private String productCode;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.wagoowagoo.fincat.api.common.type.ProductType;
+import com.wagoowagoo.fincat.api.product.entity.ProductType;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeObjectMapper;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeRequest;
 import com.wagoowagoo.fincat.common.ErrorCode;

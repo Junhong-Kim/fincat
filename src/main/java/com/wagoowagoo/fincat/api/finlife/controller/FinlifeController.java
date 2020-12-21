@@ -1,6 +1,6 @@
 package com.wagoowagoo.fincat.api.finlife.controller;
 
-import com.wagoowagoo.fincat.api.common.type.ProductType;
+import com.wagoowagoo.fincat.api.product.entity.ProductType;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeObjectMapper;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeRequest;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeResponse;

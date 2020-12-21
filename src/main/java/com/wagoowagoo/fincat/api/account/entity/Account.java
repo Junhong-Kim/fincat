@@ -23,7 +23,8 @@ public class Account extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
 
-    private String accountType;
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
 
     private String email;
 

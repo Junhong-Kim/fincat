@@ -1,4 +1,4 @@
-package com.wagoowagoo.fincat.api.common.type;
+package com.wagoowagoo.fincat.api.product.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -37,7 +37,7 @@ public class AccountService implements UserDetailsService {
             throw new ApiException(ErrorCode.DUPLICATE_EMAIL_ACCOUNT);
         });
         return Account.builder()
-                .accountType(AccountType.EMAIL.getValue())
+                .accountType(AccountType.EMAIL)
                 .email(dto.getEmail())
                 .password(dto.getPassword())
                 .build();
