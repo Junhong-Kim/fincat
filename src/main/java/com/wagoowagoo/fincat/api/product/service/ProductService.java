@@ -5,8 +5,11 @@ import com.wagoowagoo.fincat.api.product.dto.ProductDto;
 import com.wagoowagoo.fincat.api.product.entity.ProductBookmark;
 import com.wagoowagoo.fincat.api.product.repository.ProductBookmarkRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +27,10 @@ public class ProductService {
                 .finCompanyCode(dto.getFinCompanyCode())
                 .build();
         productBookmarkRepository.save(productBookmark);
+    }
+
+    public List<ProductBookmark> getBookmarkList(Account account, Pageable pageable) {
+        return productBookmarkRepository.getBookmarkList(account, pageable);
     }
 
     @Transactional
