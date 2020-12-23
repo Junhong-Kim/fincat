@@ -28,14 +28,14 @@ public class ProductDto {
 
     @Getter
     @Setter
-    public static class BookmarkList {
+    public static class Bookmark {
 
         private String productCode;
 
         private String finCompanyCode;
 
         @Builder
-        private BookmarkList(String productCode, String finCompanyCode) {
+        private Bookmark(String productCode, String finCompanyCode) {
             this.productCode = productCode;
             this.finCompanyCode = finCompanyCode;
         }

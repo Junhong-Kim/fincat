@@ -1,5 +1,6 @@
 package com.wagoowagoo.fincat.api.product.service;
 
+import com.querydsl.core.QueryResults;
 import com.wagoowagoo.fincat.api.account.entity.Account;
 import com.wagoowagoo.fincat.api.product.dto.ProductDto;
 import com.wagoowagoo.fincat.api.product.entity.ProductBookmark;
@@ -8,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -29,7 +28,7 @@ public class ProductService {
         productBookmarkRepository.save(productBookmark);
     }
 
-    public List<ProductBookmark> getBookmarkList(Account account, Pageable pageable) {
+    public QueryResults<ProductBookmark> getBookmarkList(Account account, Pageable pageable) {
         return productBookmarkRepository.getBookmarkList(account, pageable);
     }
 

@@ -9,7 +9,6 @@ import com.wagoowagoo.fincat.exception.ApiException;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 
 import static com.wagoowagoo.fincat.api.product.entity.QProductBookmark.productBookmark;
 
@@ -22,14 +21,13 @@ public class ProductBookmarkRepositoryImpl implements ProductBookmarkRepositoryC
     }
 
     @Override
-    public List<ProductBookmark> getBookmarkList(Account account, Pageable pageable) {
-        QueryResults<ProductBookmark> results = queryFactory
+    public QueryResults<ProductBookmark> getBookmarkList(Account account, Pageable pageable) {
+        return queryFactory
                 .selectFrom(productBookmark)
                 .where(productBookmark.account.accountId.eq(account.getAccountId()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
-        return results.getResults();
     }
 
     @Override

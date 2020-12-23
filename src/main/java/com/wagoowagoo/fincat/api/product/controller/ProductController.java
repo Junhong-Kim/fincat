@@ -1,8 +1,10 @@
 package com.wagoowagoo.fincat.api.product.controller;
 
+import com.querydsl.core.QueryResults;
 import com.wagoowagoo.fincat.api.account.entity.Account;
 import com.wagoowagoo.fincat.api.account.service.AccountService;
 import com.wagoowagoo.fincat.api.product.dto.ProductDto;
+import com.wagoowagoo.fincat.api.product.dto.ProductResponse;
 import com.wagoowagoo.fincat.api.product.entity.ProductBookmark;
 import com.wagoowagoo.fincat.api.product.service.ProductService;
 import com.wagoowagoo.fincat.common.BaseResponse;
@@ -13,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -38,14 +38,9 @@ public class ProductController {
         String accessToken = RequestUtil.getAccessToken(request);
         Account account = accountService.getAccount(accessToken);
 
-        List<ProductBookmark> bookmarkList = productService.getBookmarkList(account, pageable);
-        List<ProductDto.BookmarkList> response = bookmarkList.stream()
-                .map(bookmark -> ProductDto.BookmarkList.builder()
-                        .productCode(bookmark.getProductCode())
-                        .finCompanyCode(bookmark.getFinCompanyCode())
-                        .build())
-                .collect(Collectors.toList());
-        return new SuccessResponse<>();
+        QueryResults<ProductBookmark> results = productService.getBookmarkList(account, pageable);
+        ProductResponse.GetBookmarkList response = new ProductResponse.GetBookmarkList(results.getTotal(), results.getResults());
+        return new SuccessResponse<>(response);
     }
 
     @DeleteMapping("/bookmark/{bookmarkId}")
