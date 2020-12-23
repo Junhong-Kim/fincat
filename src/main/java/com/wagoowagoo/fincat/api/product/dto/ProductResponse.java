@@ -1,6 +1,5 @@
 package com.wagoowagoo.fincat.api.product.dto;
 
-import com.wagoowagoo.fincat.api.product.entity.ProductBookmark;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -14,19 +13,19 @@ public class ProductResponse {
     }
 
     @Getter
-    public static class GetBookmarkList implements Serializable {
+    public static class GetProductBookmarkList implements Serializable {
 
         private static final long serialVersionUID = 2721606453240952774L;
 
         private final long totalCount;
-        private final List<ProductDto.Bookmark> bookmarkList;
+        private final List<ProductDto.ProductBookmark> productBookmarkList;
 
-        public GetBookmarkList(long totalCount, List<ProductBookmark> bookmarkList) {
+        public GetProductBookmarkList(long totalCount, List<com.wagoowagoo.fincat.api.product.entity.ProductBookmark> productBookmarkList) {
             this.totalCount = totalCount;
-            this.bookmarkList = bookmarkList.stream()
-                    .map(bookmark -> ProductDto.Bookmark.builder()
-                            .productCode(bookmark.getProductCode())
-                            .finCompanyCode(bookmark.getFinCompanyCode())
+            this.productBookmarkList = productBookmarkList.stream()
+                    .map(productBookmark -> ProductDto.ProductBookmark.builder()
+                            .productCode(productBookmark.getProductCode())
+                            .finCompanyCode(productBookmark.getFinCompanyCode())
                             .build())
                     .collect(Collectors.toList());
         }

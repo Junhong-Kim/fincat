@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductBookmarkRepositoryCustom {
 
-    QueryResults<ProductBookmark> getBookmarkList(Account account, Pageable pageable);
-    void deleteBookmark(Account account, long bookmarkId);
+    QueryResults<ProductBookmark> getProductBookmarkList(Account account, Pageable pageable);
+    void deleteProductBookmark(Account account, long productBookmarkId);
 }

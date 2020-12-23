@@ -21,7 +21,7 @@ public class ProductBookmarkRepositoryImpl implements ProductBookmarkRepositoryC
     }
 
     @Override
-    public QueryResults<ProductBookmark> getBookmarkList(Account account, Pageable pageable) {
+    public QueryResults<ProductBookmark> getProductBookmarkList(Account account, Pageable pageable) {
         return queryFactory
                 .selectFrom(productBookmark)
                 .where(productBookmark.account.accountId.eq(account.getAccountId()))
@@ -31,16 +31,16 @@ public class ProductBookmarkRepositoryImpl implements ProductBookmarkRepositoryC
     }
 
     @Override
-    public void deleteBookmark(Account account, long bookmarkId) {
+    public void deleteProductBookmark(Account account, long productBookmarkId) {
         long deletedRows = queryFactory
                 .delete(productBookmark)
                 .where(
                         productBookmark.account.accountId.eq(account.getAccountId()),
-                        productBookmark.productBookmarkId.eq(bookmarkId)
+                        productBookmark.productBookmarkId.eq(productBookmarkId)
                 )
                 .execute();
 
         if (deletedRows == 0)
-            throw new ApiException(ErrorCode.DELETE_BOOKMARK_ERROR);
+            throw new ApiException(ErrorCode.PRODUCT_BOOKMARK_DELETE_ERROR);
     }
 }

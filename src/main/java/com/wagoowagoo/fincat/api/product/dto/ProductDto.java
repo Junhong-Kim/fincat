@@ -15,7 +15,7 @@ public class ProductDto {
 
     @Getter
     @Setter
-    public static class CreateBookmark {
+    public static class CreateProductBookmark {
 
         private ProductType productType;
 
@@ -28,14 +28,14 @@ public class ProductDto {
 
     @Getter
     @Setter
-    public static class Bookmark {
+    public static class ProductBookmark {
 
         private String productCode;
 
         private String finCompanyCode;
 
         @Builder
-        private Bookmark(String productCode, String finCompanyCode) {
+        private ProductBookmark(String productCode, String finCompanyCode) {
             this.productCode = productCode;
             this.finCompanyCode = finCompanyCode;
         }

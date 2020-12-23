@@ -18,7 +18,7 @@ public class ProductService {
     private final ProductBookmarkRepository productBookmarkRepository;
 
     @Transactional
-    public void createBookmark(Account account, ProductDto.CreateBookmark dto) {
+    public void createProductBookmark(Account account, ProductDto.CreateProductBookmark dto) {
         ProductBookmark productBookmark = ProductBookmark.builder()
                 .account(account)
                 .productType(dto.getProductType())
@@ -28,12 +28,12 @@ public class ProductService {
         productBookmarkRepository.save(productBookmark);
     }
 
-    public QueryResults<ProductBookmark> getBookmarkList(Account account, Pageable pageable) {
-        return productBookmarkRepository.getBookmarkList(account, pageable);
+    public QueryResults<ProductBookmark> getProductBookmarkList(Account account, Pageable pageable) {
+        return productBookmarkRepository.getProductBookmarkList(account, pageable);
     }
 
     @Transactional
-    public void deleteBookmark(Account account, long bookmarkId) {
-        productBookmarkRepository.deleteBookmark(account, bookmarkId);
+    public void deleteProductBookmark(Account account, long productBookmarkId) {
+        productBookmarkRepository.deleteProductBookmark(account, productBookmarkId);
     }
 }

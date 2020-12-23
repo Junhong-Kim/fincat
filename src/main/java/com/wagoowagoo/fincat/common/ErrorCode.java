@@ -17,7 +17,7 @@ public enum ErrorCode {
     NOT_FOUND_NOTICE("0201", "공지사항을 찾을 수 없습니다."),
 
     // PRODUCT [03xx]
-    DELETE_BOOKMARK_ERROR("0301", "북마크 삭제 오류가 발생했습니다."),
+    PRODUCT_BOOKMARK_DELETE_ERROR("0301", "상품 북마크 삭제 오류가 발생했습니다."),
 
     // COMMON [99xx]
     REQUEST_ERROR("9901", "요청 에러"),

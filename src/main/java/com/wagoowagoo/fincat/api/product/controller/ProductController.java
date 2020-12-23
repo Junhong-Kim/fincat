@@ -25,33 +25,33 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/bookmark")
-    public BaseResponse createBookmark(HttpServletRequest request, @RequestBody ProductDto.CreateBookmark dto) {
+    public BaseResponse createProductBookmark(HttpServletRequest request, @RequestBody ProductDto.CreateProductBookmark dto) {
         String accessToken = RequestUtil.getAccessToken(request);
         Account account = accountService.getAccount(accessToken);
 
-        productService.createBookmark(account, dto);
+        productService.createProductBookmark(account, dto);
         return new SuccessResponse<>();
     }
 
     @GetMapping("/bookmark")
-    public BaseResponse getBookmarkList(HttpServletRequest request, Pageable pageable) {
+    public BaseResponse getProductBookmarkList(HttpServletRequest request, Pageable pageable) {
         String accessToken = RequestUtil.getAccessToken(request);
         Account account = accountService.getAccount(accessToken);
 
-        QueryResults<ProductBookmark> results = productService.getBookmarkList(account, pageable);
-        ProductResponse.GetBookmarkList response = new ProductResponse.GetBookmarkList(results.getTotal(), results.getResults());
+        QueryResults<ProductBookmark> results = productService.getProductBookmarkList(account, pageable);
+        ProductResponse.GetProductBookmarkList response = new ProductResponse.GetProductBookmarkList(results.getTotal(), results.getResults());
         return new SuccessResponse<>(response);
     }
 
-    @DeleteMapping("/bookmark/{bookmarkId}")
-    public BaseResponse deleteBookmark(
+    @DeleteMapping("/bookmark/{productBookmarkId}")
+    public BaseResponse deleteProductBookmark(
             HttpServletRequest request,
-            @PathVariable("bookmarkId") long bookmarkId)
+            @PathVariable("productBookmarkId") long productBookmarkId)
     {
         String accessToken = RequestUtil.getAccessToken(request);
         Account account = accountService.getAccount(accessToken);
 
-        productService.deleteBookmark(account, bookmarkId);
+        productService.deleteProductBookmark(account, productBookmarkId);
         return new SuccessResponse<>();
     }
 }
