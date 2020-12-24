@@ -29,6 +29,7 @@ public class ProductController {
         String accessToken = RequestUtil.getAccessToken(request);
         Account account = accountService.getAccount(accessToken);
 
+        productService.validateProductBookmark(account, dto.getProductType());
         productService.createProductBookmark(account, dto);
         return new SuccessResponse<>();
     }

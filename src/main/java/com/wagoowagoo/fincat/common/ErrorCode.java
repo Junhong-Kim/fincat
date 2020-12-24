@@ -18,6 +18,7 @@ public enum ErrorCode {
 
     // PRODUCT [03xx]
     PRODUCT_BOOKMARK_DELETE_ERROR("0301", "상품 북마크 삭제 오류가 발생했습니다."),
+    PRODUCT_BOOKMARK_EXCEED_ERROR("0302", "상품 북마크 최대 개수를 초과했습니다."),
 
     // COMMON [99xx]
     REQUEST_ERROR("9901", "요청 에러"),

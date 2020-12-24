@@ -4,7 +4,10 @@ import com.querydsl.core.QueryResults;
 import com.wagoowagoo.fincat.api.account.entity.Account;
 import com.wagoowagoo.fincat.api.product.dto.ProductDto;
 import com.wagoowagoo.fincat.api.product.entity.ProductBookmark;
+import com.wagoowagoo.fincat.api.product.entity.ProductType;
 import com.wagoowagoo.fincat.api.product.repository.ProductBookmarkRepository;
+import com.wagoowagoo.fincat.common.ErrorCode;
+import com.wagoowagoo.fincat.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,5 +38,12 @@ public class ProductService {
     @Transactional
     public void deleteProductBookmark(Account account, long productBookmarkId) {
         productBookmarkRepository.deleteProductBookmark(account, productBookmarkId);
+    }
+
+    public void validateProductBookmark(Account account, ProductType productType) {
+        long count = productBookmarkRepository.getProductBookmarkCount(account, productType);
+
+        if (count >= 3)
+            throw new ApiException(ErrorCode.PRODUCT_BOOKMARK_EXCEED_ERROR);
     }
 }

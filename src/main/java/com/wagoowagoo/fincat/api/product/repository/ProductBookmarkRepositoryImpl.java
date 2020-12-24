@@ -4,6 +4,7 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wagoowagoo.fincat.api.account.entity.Account;
 import com.wagoowagoo.fincat.api.product.entity.ProductBookmark;
+import com.wagoowagoo.fincat.api.product.entity.ProductType;
 import com.wagoowagoo.fincat.common.ErrorCode;
 import com.wagoowagoo.fincat.exception.ApiException;
 import org.springframework.data.domain.Pageable;
@@ -42,5 +43,16 @@ public class ProductBookmarkRepositoryImpl implements ProductBookmarkRepositoryC
 
         if (deletedRows == 0)
             throw new ApiException(ErrorCode.PRODUCT_BOOKMARK_DELETE_ERROR);
+    }
+
+    @Override
+    public long getProductBookmarkCount(Account account, ProductType productType) {
+        return queryFactory
+                .selectFrom(productBookmark)
+                .where(
+                        productBookmark.account.accountId.eq(account.getAccountId()),
+                        productBookmark.productType.eq(productType)
+                )
+                .fetchCount();
     }
 }
