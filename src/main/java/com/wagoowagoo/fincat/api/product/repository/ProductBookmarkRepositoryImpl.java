@@ -1,6 +1,7 @@
 package com.wagoowagoo.fincat.api.product.repository;
 
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wagoowagoo.fincat.api.account.entity.Account;
 import com.wagoowagoo.fincat.api.product.entity.ProductBookmark;
@@ -25,7 +26,9 @@ public class ProductBookmarkRepositoryImpl implements ProductBookmarkRepositoryC
     public QueryResults<ProductBookmark> getProductBookmarkList(Account account, Pageable pageable) {
         return queryFactory
                 .selectFrom(productBookmark)
-                .where(productBookmark.account.accountId.eq(account.getAccountId()))
+                .where(
+                        accountIdEq(account.getAccountId())
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -36,8 +39,8 @@ public class ProductBookmarkRepositoryImpl implements ProductBookmarkRepositoryC
         long deletedRows = queryFactory
                 .delete(productBookmark)
                 .where(
-                        productBookmark.account.accountId.eq(account.getAccountId()),
-                        productBookmark.productBookmarkId.eq(productBookmarkId)
+                        accountIdEq(account.getAccountId()),
+                        productBookmarkIdEq(productBookmarkId)
                 )
                 .execute();
 
@@ -50,9 +53,21 @@ public class ProductBookmarkRepositoryImpl implements ProductBookmarkRepositoryC
         return queryFactory
                 .selectFrom(productBookmark)
                 .where(
-                        productBookmark.account.accountId.eq(account.getAccountId()),
-                        productBookmark.productType.eq(productType)
+                        accountIdEq(account.getAccountId()),
+                        productTypeEq(productType)
                 )
                 .fetchCount();
+    }
+
+    private BooleanExpression accountIdEq(long accountId) {
+        return productBookmark.account.accountId.eq(accountId);
+    }
+
+    private BooleanExpression productBookmarkIdEq(long productBookmarkId) {
+        return productBookmark.productBookmarkId.eq(productBookmarkId);
+    }
+
+    private BooleanExpression productTypeEq(ProductType productType) {
+        return productBookmark.productType.eq(productType);
     }
 }
