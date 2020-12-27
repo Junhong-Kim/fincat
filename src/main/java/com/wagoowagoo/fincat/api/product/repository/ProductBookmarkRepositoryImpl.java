@@ -23,11 +23,12 @@ public class ProductBookmarkRepositoryImpl implements ProductBookmarkRepositoryC
     }
 
     @Override
-    public QueryResults<ProductBookmark> getProductBookmarkList(Account account, Pageable pageable) {
+    public QueryResults<ProductBookmark> getProductBookmarkList(Account account, Pageable pageable, ProductType productType) {
         return queryFactory
                 .selectFrom(productBookmark)
                 .where(
-                        accountIdEq(account.getAccountId())
+                        accountIdEq(account.getAccountId()),
+                        productTypeEq(productType)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

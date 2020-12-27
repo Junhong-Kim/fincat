@@ -31,8 +31,8 @@ public class ProductService {
         productBookmarkRepository.save(productBookmark);
     }
 
-    public QueryResults<ProductBookmark> getProductBookmarkList(Account account, Pageable pageable) {
-        return productBookmarkRepository.getProductBookmarkList(account, pageable);
+    public QueryResults<ProductBookmark> getProductBookmarkList(Account account, Pageable pageable, ProductType productType) {
+        return productBookmarkRepository.getProductBookmarkList(account, pageable, productType);
     }
 
     @Transactional

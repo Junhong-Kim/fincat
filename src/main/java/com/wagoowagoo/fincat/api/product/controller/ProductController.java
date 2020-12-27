@@ -6,6 +6,7 @@ import com.wagoowagoo.fincat.api.account.service.AccountService;
 import com.wagoowagoo.fincat.api.product.dto.ProductDto;
 import com.wagoowagoo.fincat.api.product.dto.ProductResponse;
 import com.wagoowagoo.fincat.api.product.entity.ProductBookmark;
+import com.wagoowagoo.fincat.api.product.entity.ProductType;
 import com.wagoowagoo.fincat.api.product.service.ProductService;
 import com.wagoowagoo.fincat.common.BaseResponse;
 import com.wagoowagoo.fincat.common.SuccessResponse;
@@ -35,11 +36,15 @@ public class ProductController {
     }
 
     @GetMapping("/bookmark")
-    public BaseResponse getProductBookmarkList(HttpServletRequest request, Pageable pageable) {
+    public BaseResponse getProductBookmarkList(
+            HttpServletRequest request
+            , Pageable pageable
+            , @RequestParam("productType") ProductType productType
+    ) {
         String accessToken = RequestUtil.getAccessToken(request);
         Account account = accountService.getAccount(accessToken);
 
-        QueryResults<ProductBookmark> results = productService.getProductBookmarkList(account, pageable);
+        QueryResults<ProductBookmark> results = productService.getProductBookmarkList(account, pageable, productType);
         ProductResponse.GetProductBookmarkList response = new ProductResponse.GetProductBookmarkList(results.getTotal(), results.getResults());
         return new SuccessResponse<>(response);
     }
