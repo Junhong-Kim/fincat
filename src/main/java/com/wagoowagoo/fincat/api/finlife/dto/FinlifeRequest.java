@@ -53,5 +53,8 @@ public class FinlifeRequest {
 
         @Nullable
         private String productName;
+
+        @Nullable
+        private List<String> productCodeList;
     }
 }

@@ -4,13 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.wagoowagoo.fincat.api.product.entity.ProductType;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeObjectMapper;
 import com.wagoowagoo.fincat.api.finlife.dto.FinlifeRequest;
+import com.wagoowagoo.fincat.api.product.entity.ProductType;
 import com.wagoowagoo.fincat.common.ErrorCode;
 import com.wagoowagoo.fincat.exception.ApiException;
 import com.wagoowagoo.fincat.feign.FinlifeFeignClient;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -71,6 +72,8 @@ public class FinlifeService {
 
         if (dto.getProductName() != null)
             filteredGeneralProduct = filteringGeneralProductByProductName(productMap, dto.getProductName());
+        else if (CollectionUtils.isNotEmpty(dto.getProductCodeList()))
+            filteredGeneralProduct = filteringGeneralProductByProductCode(productMap, dto.getProductCodeList());
         else
             filteredGeneralProduct = filteringGeneralProductWithOption(productMap, dto);
 
@@ -167,6 +170,19 @@ public class FinlifeService {
     {
         return productMap.entrySet().stream()
                 .filter(entry -> entry.getValue().getFin_prdt_nm().contains(productName))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    /**
+     * 상품코드로 예/적금 목록 필터링
+     * @return 예/적금 목록
+     */
+    private Map<String, FinlifeObjectMapper.GeneralProduct> filteringGeneralProductByProductCode(
+            Map<String, FinlifeObjectMapper.GeneralProduct> productMap,
+            List<String> productCodeList)
+    {
+        return productMap.entrySet().stream()
+                .filter(entry -> productCodeList.contains(entry.getValue().getFin_prdt_cd()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
