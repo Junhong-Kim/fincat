@@ -1,5 +1,6 @@
 package com.wagoowagoo.fincat.util;
 
+import com.wagoowagoo.fincat.api.account.entity.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,6 +21,10 @@ public class JwtUtil {
         return (token != null) ? extractClaim(token, Claims::getSubject) : null;
     }
 
+    public static Long extractAccountId(String token) {
+        return (token != null) ? extractClaim(token, claims -> claims.get("accountId", Long.class)) : null;
+    }
+
     public static Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
@@ -28,6 +33,7 @@ public class JwtUtil {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     private static Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(JWT_SECRET_KEY)
@@ -39,8 +45,10 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public static String generateToken(UserDetails userDetails) {
+    public static String generateToken(UserDetails userDetails, Account account) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("accountId", account.getAccountId());
+
         return createToken(claims, userDetails.getUsername());
     }
 

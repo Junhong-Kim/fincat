@@ -47,11 +47,20 @@ public class AccountService implements UserDetailsService {
      * accessToken으로 Account 조회
      */
     public Account getAccount(String accessToken) {
-        String email = JwtUtil.extractUsername(accessToken); // FIXME: extractAccountId로 변경
-        return getAccountByEmail(email);
+        Long accountId = JwtUtil.extractAccountId(accessToken);
+        return findAccountById(accountId);
     }
 
-    private Account getAccountByEmail(String email) {
+    private Account findAccountById(Long accountId) {
+        return accountRepository
+                .findById(accountId)
+                .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND_EMAIL_ACCOUNT));
+    }
+
+    /**
+     * email로 Account 조회
+     */
+    public Account findAccountByEmail(String email) {
         return accountRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND_EMAIL_ACCOUNT));
