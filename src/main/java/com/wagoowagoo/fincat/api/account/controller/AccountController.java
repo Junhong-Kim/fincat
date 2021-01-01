@@ -10,6 +10,8 @@ import com.wagoowagoo.fincat.common.ErrorCode;
 import com.wagoowagoo.fincat.common.ErrorResponse;
 import com.wagoowagoo.fincat.common.SuccessResponse;
 import com.wagoowagoo.fincat.util.JwtUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,21 +24,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+@Api(tags = "계정 API")
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/account")
-@RequiredArgsConstructor
 public class AccountController {
 
     private final AuthenticationManager authenticationManager;
     private final AccountRepository accountRepository;
     private final AccountService accountService;
 
+    @ApiOperation(value = "이메일 회원가입")
     @PostMapping("/email")
     public BaseResponse createAccount(@Valid @RequestBody AccountDto.CreateAccountWithEmail dto) {
         accountRepository.save(accountService.createAccount(dto));
         return new SuccessResponse<>();
     }
 
+    @ApiOperation(value = "이메일 로그인")
     @PostMapping("/email/login")
     public BaseResponse loginAccount(@RequestBody AccountDto.LoginAccount dto) {
         try {
