@@ -34,4 +34,8 @@ public class Account extends BaseEntity {
 
     @OneToMany(mappedBy = "account")
     private final List<ProductBookmark> productBookmarkList = new ArrayList<>();
+
+    public void updateAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 }

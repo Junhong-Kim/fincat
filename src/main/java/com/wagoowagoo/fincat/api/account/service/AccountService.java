@@ -13,25 +13,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         Account account = accountRepository
                 .findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " 존재하지 않는 사용자명입니다."));
         return new SecurityAccount(account);
     }
 
-    /***
-     * 이메일 계성 생성
-     * @param dto 이메일 계성 생성 정보
-     */
+    @Transactional
     public Account createAccount(AccountDto.CreateAccountWithEmail dto) {
         accountRepository.findByEmail(dto.getEmail()).ifPresent(account -> {
             throw new ApiException(ErrorCode.DUPLICATE_EMAIL_ACCOUNT);
@@ -43,9 +43,6 @@ public class AccountService implements UserDetailsService {
                 .build();
     }
 
-    /**
-     * accessToken으로 Account 조회
-     */
     public Account getAccount(String accessToken) {
         Long accountId = JwtUtil.extractAccountId(accessToken);
         return findAccountById(accountId);
@@ -57,12 +54,14 @@ public class AccountService implements UserDetailsService {
                 .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND_EMAIL_ACCOUNT));
     }
 
-    /**
-     * email로 Account 조회
-     */
     public Account findAccountByEmail(String email) {
         return accountRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND_EMAIL_ACCOUNT));
+    }
+
+    @Transactional
+    public void updateAccessToken(Account account, String accessToken) {
+        account.updateAccessToken(accessToken);
     }
 }

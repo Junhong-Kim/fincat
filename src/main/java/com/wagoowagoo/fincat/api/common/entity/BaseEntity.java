@@ -11,7 +11,6 @@ import javax.persistence.Version;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @MappedSuperclass
 public abstract class BaseEntity {
 

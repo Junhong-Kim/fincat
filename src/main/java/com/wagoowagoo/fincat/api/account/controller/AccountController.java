@@ -48,6 +48,8 @@ public class AccountController {
         Account account = accountService.findAccountByEmail(dto.getEmail());
 
         String accessToken = JwtUtil.generateToken(userDetails, account);
+        accountService.updateAccessToken(account, accessToken);
+
         AccountResponse.LoginAccount response = new AccountResponse.LoginAccount(accessToken);
         return new SuccessResponse<>(response);
     }
