@@ -8,9 +8,10 @@ import com.wagoowagoo.fincat.common.BaseResponse;
 import com.wagoowagoo.fincat.common.SuccessResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +36,11 @@ public class NoticeController {
 
     @ApiOperation(value = "공지사항 목록 조회")
     @GetMapping
-    public BaseResponse getNoticeList(final Pageable pageable) {
-        Page<Notice> noticeList = noticeService.getNoticeList(pageable);
+    public BaseResponse getNoticeList(
+            @ApiParam(value = "페이지", required = true) @RequestParam int page
+            , @ApiParam(value = "크기", required = true) @RequestParam int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Notice> noticeList = noticeService.getNoticeList(pageRequest);
 
         NoticeResponse.GetNoticeList response = new NoticeResponse.GetNoticeList(
                 noticeList.getTotalPages(),

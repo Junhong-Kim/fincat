@@ -13,8 +13,9 @@ import com.wagoowagoo.fincat.common.SuccessResponse;
 import com.wagoowagoo.fincat.util.RequestUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,13 +44,15 @@ public class ProductController {
     @GetMapping("/bookmark")
     public BaseResponse getProductBookmarkList(
             HttpServletRequest request
-            , Pageable pageable
-            , @RequestParam("productType") ProductType productType
+            , @ApiParam(value = "페이지", required = true) @RequestParam int page
+            , @ApiParam(value = "크기", required = true) @RequestParam int size
+            , @ApiParam(value = "상품 타입", required = true, allowableValues="DEPOSIT, SAVING") @RequestParam("productType") ProductType productType
     ) {
         String accessToken = RequestUtil.getAccessToken(request);
         Account account = accountService.getAccount(accessToken);
 
-        QueryResults<ProductBookmark> results = productService.getProductBookmarkList(account, pageable, productType);
+        PageRequest pageRequest = PageRequest.of(page, size);
+        QueryResults<ProductBookmark> results = productService.getProductBookmarkList(account, pageRequest, productType);
         ProductResponse.GetProductBookmarkList response = new ProductResponse.GetProductBookmarkList(results.getTotal(), results.getResults());
         return new SuccessResponse<>(response);
     }
