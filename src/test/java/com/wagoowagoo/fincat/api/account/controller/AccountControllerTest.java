@@ -41,4 +41,22 @@ class AccountControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(requestBuilder);
     }
+
+    @Test
+    @DisplayName("이메일 로그인 - 성공")
+    void loginEmailAccount_successTest() throws Exception {
+        // given
+        ObjectNode content = objectMapper.createObjectNode();
+        content.put("email", "test1@test.com");
+        content.put("password", "test");
+
+        // when
+        String url = "/api/v1/account/email/login";
+
+        // then
+        MockHttpServletRequestBuilder requestBuilder = post(url)
+                .content(objectMapper.writeValueAsString(content))
+                .contentType(MediaType.APPLICATION_JSON);
+        mockMvc.perform(requestBuilder);
+    }
 }
