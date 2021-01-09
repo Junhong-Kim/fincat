@@ -28,18 +28,17 @@ class AccountControllerTest extends ControllerTest {
     @DisplayName("이메일 계정 생성 - 성공")
     void createEmailAccount_successTest() throws Exception {
         // given
-        String url = "/api/v1/account/email";
-
         ObjectNode content = objectMapper.createObjectNode();
         content.put("email", "test@test.com");
         content.put("password", "test");
 
         // when
+        String url = "/api/v1/account/email";
+
+        // then
         MockHttpServletRequestBuilder requestBuilder = post(url)
                 .content(objectMapper.writeValueAsString(content))
                 .contentType(MediaType.APPLICATION_JSON);
-
-        // then
         mockMvc.perform(requestBuilder);
     }
 }

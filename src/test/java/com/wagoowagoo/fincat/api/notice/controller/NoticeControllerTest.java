@@ -33,8 +33,6 @@ class NoticeControllerTest extends ControllerTest {
     @DisplayName("공지사항 생성 - 성공")
     void createNotice_successTest() throws Exception {
         // given
-        String url = "/api/v1/notice";
-
         ObjectNode content = objectMapper.createObjectNode();
         content.put("title", "test");
         content.put("contents", "test");
@@ -42,12 +40,13 @@ class NoticeControllerTest extends ControllerTest {
         content.put("updatedBy", "test");
 
         // when
+        String url = "/api/v1/notice";
+
+        // then
         MockHttpServletRequestBuilder requestBuilder = post(url)
                 .header("Authorization", "Bearer ") // TODO: accessToken
                 .content(objectMapper.writeValueAsString(content))
                 .contentType(MediaType.APPLICATION_JSON);
-
-        // then
         mockMvc.perform(requestBuilder);
     }
 
@@ -55,18 +54,17 @@ class NoticeControllerTest extends ControllerTest {
     @DisplayName("공지사항 목록 조회 - 성공")
     void getNoticeList_successTest() throws Exception {
         // given
-        String url = "/api/v1/notice";
-
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", "0");
         params.add("size", "10");
 
         // when
+        String url = "/api/v1/notice";
+
+        // then
         MockHttpServletRequestBuilder requestBuilder = get(url)
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON);
-
-        // then
         mockMvc.perform(requestBuilder);
     }
 
@@ -74,13 +72,14 @@ class NoticeControllerTest extends ControllerTest {
     @DisplayName("공지사항 단건 조회 - 성공")
     void getNotice_successTest() throws Exception {
         // given
-        String url = "/api/v1/notice/1";
+        Long noticeId = 1L;
 
         // when
-        MockHttpServletRequestBuilder requestBuilder = get(url)
-                .contentType(MediaType.APPLICATION_JSON);
+        String url = String.join("/", "/api/v1/notice", String.valueOf(noticeId));
 
         // then
+        MockHttpServletRequestBuilder requestBuilder = get(url)
+                .contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(requestBuilder);
     }
 }

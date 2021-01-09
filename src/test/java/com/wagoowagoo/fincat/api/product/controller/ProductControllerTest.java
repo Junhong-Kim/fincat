@@ -38,20 +38,19 @@ class ProductControllerTest extends ControllerTest {
     @DisplayName("상품 북마크 생성 - 성공")
     void createProductBookmark_successTest() throws Exception {
         // given
-        String url = "/api/v1/product/bookmark";
-
         ObjectNode content = objectMapper.createObjectNode();
         content.put("productType", "DEPOSIT");
         content.put("productCode", "1");
         content.put("finCompanyCode", "1");
 
         // when
+        String url = "/api/v1/product/bookmark";
+
+        // then
         MockHttpServletRequestBuilder requestBuilder = post(url)
                 .header("Authorization", "Bearer " + getAccessToken())
                 .content(objectMapper.writeValueAsString(content))
                 .contentType(MediaType.APPLICATION_JSON);
-
-        // then
         mockMvc.perform(requestBuilder);
     }
 
@@ -59,14 +58,14 @@ class ProductControllerTest extends ControllerTest {
     @DisplayName("상품 북마크 목록 조회 - 성공")
     void getProductBookmarkList_successTest() throws Exception {
         // given
-        String url = "/api/v1/product/bookmark";
-
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("page", "0");
         params.add("size", "10");
         params.add("productType", "DEPOSIT");
 
         // when
+        String url = "/api/v1/product/bookmark";
+
         MockHttpServletRequestBuilder requestBuilder = get(url)
                 .header("Authorization", "Bearer " + getAccessToken())
                 .params(params)
@@ -81,14 +80,15 @@ class ProductControllerTest extends ControllerTest {
     @DisplayName("상품 북마크 삭제 - 성공")
     void deleteProductBookmark_successTest() throws Exception {
         // given
-        String url = "/api/v1/product/bookmark/1";
+        Long bookmarkId = 1L;
 
         // when
+        String url = String.join("/", "/api/v1/product/bookmark", String.valueOf(bookmarkId));
+
+        // then
         MockHttpServletRequestBuilder requestBuilder = delete(url)
                 .header("Authorization", "Bearer " + getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON);
-
-        // then
         mockMvc.perform(requestBuilder);
     }
 

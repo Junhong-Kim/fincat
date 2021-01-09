@@ -25,18 +25,17 @@ class FinlifeControllerTest extends ControllerTest {
     @DisplayName("금융회사 목록 조회 (필수 값) - 성공")
     void getFinanceCompany_successTest() throws Exception {
         // given
-        String url = "/api/v1/finlife/financeCompany";
-
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("topFinGrpNo", "020000");
         params.add("pageNo", "1");
 
         // when
+        String url = "/api/v1/finlife/financeCompany";
+
+        // then
         MockHttpServletRequestBuilder requestBuilder = get(url)
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON);
-
-        // then
         mockMvc.perform(requestBuilder);
     }
 
@@ -44,19 +43,18 @@ class FinlifeControllerTest extends ControllerTest {
     @DisplayName("예금상품 목록 조회 (필수 값) - 성공")
     void getDepositProductList_successTest() throws Exception {
         // given
-        String url = "/api/v1/finlife/depositProduct";
-
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("topFinGrpNo", "020000");
         params.add("saveTermList", "12");
         params.add("interestRateTypeList", "S");
 
         // when
+        String url = "/api/v1/finlife/depositProduct";
+
+        // then
         MockHttpServletRequestBuilder requestBuilder = get(url)
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON);
-
-        // then
         mockMvc.perform(requestBuilder);
     }
 
@@ -64,19 +62,18 @@ class FinlifeControllerTest extends ControllerTest {
     @DisplayName("적금상품 목록 조회 (필수 값) - 성공")
     void getSavingProductList_successTest() throws Exception {
         // given
-        String url = "/api/v1/finlife/savingProduct";
-
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("topFinGrpNo", "020000");
         params.add("saveTermList", "12");
         params.add("interestRateTypeList", "S");
 
         // when
+        String url = "/api/v1/finlife/savingProduct";
+
+        // then
         MockHttpServletRequestBuilder requestBuilder = get(url)
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON);
-
-        // then
         mockMvc.perform(requestBuilder);
     }
 }
