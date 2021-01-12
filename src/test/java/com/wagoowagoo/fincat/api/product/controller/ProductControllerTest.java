@@ -2,16 +2,13 @@ package com.wagoowagoo.fincat.api.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.wagoowagoo.fincat.api.account.entity.Account;
-import com.wagoowagoo.fincat.api.account.service.AccountService;
 import com.wagoowagoo.fincat.common.ControllerTest;
-import com.wagoowagoo.fincat.util.JwtUtil;
+import com.wagoowagoo.fincat.common.TestService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -24,7 +21,7 @@ class ProductControllerTest extends ControllerTest {
     private ProductController productController;
 
     @Autowired
-    private AccountService accountService;
+    private TestService testService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -48,7 +45,7 @@ class ProductControllerTest extends ControllerTest {
 
         // then
         MockHttpServletRequestBuilder requestBuilder = post(url)
-                .header("Authorization", "Bearer " + getAccessToken())
+                .header("Authorization", "Bearer " + testService.getAccessToken())
                 .content(objectMapper.writeValueAsString(content))
                 .contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(requestBuilder);
@@ -67,7 +64,7 @@ class ProductControllerTest extends ControllerTest {
         String url = "/api/v1/product/bookmark";
 
         MockHttpServletRequestBuilder requestBuilder = get(url)
-                .header("Authorization", "Bearer " + getAccessToken())
+                .header("Authorization", "Bearer " + testService.getAccessToken())
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -87,15 +84,8 @@ class ProductControllerTest extends ControllerTest {
 
         // then
         MockHttpServletRequestBuilder requestBuilder = delete(url)
-                .header("Authorization", "Bearer " + getAccessToken())
+                .header("Authorization", "Bearer " + testService.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(requestBuilder);
-    }
-
-    // FIXME: accessToken 생성 로직 분리
-    private String getAccessToken() {
-        UserDetails userDetails = accountService.loadUserByUsername("test1@test.com");
-        Account account = accountService.findAccountByEmail("test1@test.com");
-        return JwtUtil.generateToken(userDetails, account);
     }
 }
